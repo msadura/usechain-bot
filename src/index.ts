@@ -7,6 +7,7 @@ import { activateArbitrumAccounts } from '@app/arbitrum/arbitrum';
 
 async function main() {
   await connectProvider();
+
   // 1) Uncomment and run once to generate file with accounts
   // generateMinions(20);
 
