@@ -1,0 +1,13 @@
+.env
+.vscode
+node_modules/
+build/
+.DS_Store
+
+# zergArmy/minions.json
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+src/minions/*.json
