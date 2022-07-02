@@ -74,7 +74,7 @@ const activateAccount = async (minion: MinionAccount, actions: ActivateAction[])
   updatedMinion.done = true;
   updateMinion(updatedMinion);
 
-  console.log('🔥 activated account data:', updatedMinion);
+  console.log('🔥 activated account fee:', updatedMinion.totalFee);
   console.log('🔥', `Minion: ${minion.id} done. Funds send to next account.`);
 
   return updatedMinions;

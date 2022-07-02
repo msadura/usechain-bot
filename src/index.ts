@@ -11,7 +11,7 @@ async function main() {
   await connectProvider();
 
   // 1) Uncomment and run once to generate file with accounts
-  // generateMinions(10);
+  generateMinions(11);
 
   // 2) Send manually ETH to first minion account
 
