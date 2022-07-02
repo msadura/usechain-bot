@@ -1,3 +1,4 @@
+import { wait } from '@app/utils/wait';
 import { BigNumber, ethers, Wallet } from 'ethers';
 import UniswapV2RouterABI from '@app/trade/uniswap/abi/UniswapV2SwapRouter02.json';
 import { abi as ERC20ABI } from '@openzeppelin/contracts/build/contracts/ERC20.json';
@@ -80,11 +81,11 @@ export const V2SwapRouter = async ({
 
   if (tradeTx) {
     await tradeTx?.wait();
+  } else {
+    await wait(5000);
   }
 
-  //Check if got traded tokens
-  const outBalance: BigNumber = await tokenOutContract.balanceOf(signer.address);
-  console.log(`🔥 ${assetOut.name} balance after trade:`, formatUnits(outBalance));
+  console.log('------ EOT ------');
 
   return true;
 };

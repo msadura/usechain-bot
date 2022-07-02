@@ -15,13 +15,17 @@ Open index.ts:
 
   run `yarn start`
 
+  Minions are generated under `/src/minions` dir, you can configure filename by setting `MINIONS_FILE_NAME` in `src/constants.ts`
+
   2) Send manually ETH to first minion account
 
   3) Uncomment activvate action to active generated minions
 
   // activateArbitrumAccounts();
-  
+
   run `yarn start`
 
-  4) ETH will stay on last minion and you gan send it back manually by importing last minion to your MM
+  4) You can send back ETH to desired address by running:
+
+  // sendEthFromMinion(mnemonic, recipient);
 

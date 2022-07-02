@@ -1,3 +1,4 @@
+import { transferEthFromWallet } from '@app/utils/transferEthFromWallet';
 import { ActivateAction } from './types/index';
 import { updateMinion } from './../minions/minions';
 import { getProvider } from '@app/blockchain/provider';
@@ -21,6 +22,7 @@ export const activateAccounts = async (actions: ActivateAction[]) => {
 
     console.log('🔥', `Activating account: ${acc.id}`);
     const res = await activateAccount(acc, actions);
+    await wait(5000);
 
     minions = res ? res : getMinions();
   }
@@ -51,34 +53,26 @@ const activateAccount = async (minion: MinionAccount, actions: ActivateAction[])
 
   for (const action of actions) {
     await action(signer);
+    await wait(5000);
   }
+
+  updatedMinion.done = true;
+  updateMinion(updatedMinion);
 
   // check out eth balance
   const balanceAfterActions = await signer.getBalance();
-  const { gasValue, gasPrice, gasLimit } = await getGasValue();
-  const balanceOut = balanceAfterActions.sub(gasValue);
-  if (balanceOut.lte(0)) {
-    throw 'No balance to send to next account';
+  const updatedMinions = getMinions();
+
+  const recipientMinion = getNextAccount(updatedMinions);
+  let balanceOut = balanceAfterActions;
+  if (recipientMinion) {
+    balanceOut = await transferEthFromWallet(signer, recipientMinion.address);
   }
 
   updatedMinion.amountOut = formatEther(balanceOut);
   updatedMinion.totalFee = formatEther(balanceIn.sub(balanceOut));
   updatedMinion.done = true;
   updateMinion(updatedMinion);
-
-  const updatedMinions = getMinions();
-
-  const recipientMinion = getNextAccount(updatedMinions);
-  if (recipientMinion) {
-    const tx = await signer.sendTransaction({
-      to: recipientMinion.address,
-      value: balanceOut,
-      gasPrice,
-      gasLimit
-    });
-
-    await tx.wait();
-  }
 
   console.log('🔥 activated account data:', updatedMinion);
   console.log('🔥', `Minion: ${minion.id} done. Funds send to next account.`);

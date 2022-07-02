@@ -1,6 +1,6 @@
 import { getSignerFromMnemonic } from '@app/blockchain/wallet';
 import { getMinions } from '@app/minions/minions';
-import { getGasValue } from '@app/utils/getGasValue';
+import { transferEthFromWallet } from '@app/utils/transferEthFromWallet';
 
 export const sendEthFromMinion = async (minionId: number, recipient: string) => {
   const minions = getMinions();
@@ -11,20 +11,5 @@ export const sendEthFromMinion = async (minionId: number, recipient: string) => 
   }
 
   const signer = getSignerFromMnemonic(minion.mnemonic);
-  const balance = await signer.getBalance();
-  const { gasValue, gasPrice, gasLimit } = await getGasValue();
-  const balanceOut = balance.sub(gasValue);
-
-  if (balanceOut.lte(0)) {
-    throw 'No balance to send to next account';
-  }
-
-  const tx = await signer.sendTransaction({
-    to: recipient,
-    value: balanceOut,
-    gasPrice,
-    gasLimit
-  });
-
-  await tx.wait();
+  await transferEthFromWallet(signer, recipient);
 };
