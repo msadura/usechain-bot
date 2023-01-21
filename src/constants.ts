@@ -9,8 +9,9 @@ export const NETWORK_TYPE = safeEnv(process.env.NETWORK_TYPE, 'testnet') as Netw
 export const WSS_RPC_URL = process.env.WSS_RPC_URL as string;
 export const MNEMONIC = process.env.MNEMONIC as string;
 
-export const MINIONS_FILE_NAME = 'arbitrumMinions';
+// todo: set filename per chain / action
+export const MINIONS_FILE_NAME = 'epsylonFTMMinions';
 export const MAX_GAS_PRICE = 0;
 export const GAS_WAIT_TIME = 10000;
 export const MIN_WALLET_BALANCE = '0.005';
-export const SEND_GAS_LIMIT = 499000; // 21k for ETH mainnet, 499k for argitrum
+export const SEND_GAS_LIMIT = 21000; // 21k for ETH mainnet, 499k for argitrum, 21k FTM

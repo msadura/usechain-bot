@@ -6,4 +6,5 @@ export type TradeAsset = {
   name: string;
   address: string;
   decimals: number;
+  tradeAmount?: string;
 };

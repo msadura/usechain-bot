@@ -3,7 +3,7 @@ import { USDC, SUSHI_ROUTER_ADDRESS, WETH } from '@app/arbitrum/constants';
 import { getV2SwapRouterAction } from '@app/trade/V2SwapRouter/V2SwapRouter';
 import { activateAccounts } from '@app/actions/activateAccounts';
 
-export const getArbitrumActions = (): ActivateAction[] => {
+export const getArbitrumGuildActions = (): ActivateAction[] => {
   // Buy USDC for ETH on sushi
   const sellWeth = getV2SwapRouterAction({
     assetIn: WETH,
@@ -24,7 +24,7 @@ export const getArbitrumActions = (): ActivateAction[] => {
 };
 
 export const activateArbitrumAccounts = async () => {
-  const actions = getArbitrumActions();
+  const actions = getArbitrumGuildActions();
 
   await activateAccounts(actions);
 };

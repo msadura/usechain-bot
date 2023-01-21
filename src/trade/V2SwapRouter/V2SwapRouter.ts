@@ -7,7 +7,7 @@ import { formatUnits } from 'ethers/lib/utils';
 import { isTokenApproved } from '@app/trade/utils';
 import { TradeAsset } from '@app/types';
 
-type SushiConfig = {
+type Config = {
   assetIn: TradeAsset;
   assetOut: TradeAsset;
   swapRouterAddress: string;
@@ -16,7 +16,7 @@ type SushiConfig = {
 
 type Params = {
   signer: Wallet;
-} & SushiConfig;
+} & Config;
 
 export const V2SwapRouter = async ({
   assetIn,
@@ -29,7 +29,6 @@ export const V2SwapRouter = async ({
 
   const swapRouterContract = new ethers.Contract(swapRouterAddress, UniswapV2RouterABI, signer);
   const tokenInContract = new ethers.Contract(assetIn.address, ERC20ABI, signer);
-  const tokenOutContract = new ethers.Contract(assetOut.address, ERC20ABI, signer);
 
   const inBalancePromise: Promise<BigNumber> = isETHIn
     ? signer.getBalance()
@@ -90,6 +89,6 @@ export const V2SwapRouter = async ({
   return true;
 };
 
-export const getV2SwapRouterAction = (config: SushiConfig) => {
+export const getV2SwapRouterAction = (config: Config) => {
   return (signer: Wallet) => V2SwapRouter({ ...config, signer });
 };

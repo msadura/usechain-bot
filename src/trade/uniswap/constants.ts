@@ -1,0 +1,5 @@
+export const QUOTER_ADDRESS = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
+
+export const WETH = {
+  arbitrum: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'
+};

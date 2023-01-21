@@ -9,9 +9,12 @@ import { wait } from '@app/utils/wait';
 import { formatEther, parseEther, parseUnits } from 'ethers/lib/utils';
 import { getSignerFromMnemonic } from '@app/blockchain/wallet';
 import { BigNumber } from 'ethers';
-import { getGasValue } from '@app/utils/getGasValue';
 
-export const activateAccounts = async (actions: ActivateAction[]) => {
+type Config = {
+  skipPostAction?: boolean;
+};
+
+export const activateAccounts = async (actions: ActivateAction[], config: Config = {}) => {
   let minions: MinionAccount[] = getMinions();
 
   let acc: MinionAccount | undefined;
@@ -21,18 +24,32 @@ export const activateAccounts = async (actions: ActivateAction[]) => {
     }
 
     console.log('🔥', `Activating account: ${acc.id}`);
-    const res = await activateAccount(acc, actions);
+    const recipient = getNextAccount(minions, true)?.address || '';
+    const res = await activateAccount(acc, actions, recipient, config);
     await wait(5000);
 
     minions = res ? res : getMinions();
   }
 };
 
-const getNextAccount = (minions: MinionAccount[]) => {
-  return minions.find(m => m.done !== true);
+const getNextAccount = (minions: MinionAccount[], getRecipient = false) => {
+  const idx = minions.findIndex(m => m.done !== true);
+  if (idx < 0) {
+    return;
+  }
+
+  const minionIndex = getRecipient ? idx + 1 : idx;
+  const minion = minions[minionIndex];
+
+  return minion;
 };
 
-const activateAccount = async (minion: MinionAccount, actions: ActivateAction[]) => {
+const activateAccount = async (
+  minion: MinionAccount,
+  actions: ActivateAction[],
+  recipient: string,
+  config: Config
+) => {
   if (minion.done) {
     return;
   }
@@ -52,7 +69,7 @@ const activateAccount = async (minion: MinionAccount, actions: ActivateAction[])
   updatedMinion.amountIn = formatEther(balanceIn);
 
   for (const action of actions) {
-    await action(signer);
+    await action(signer, recipient);
     await wait(5000);
   }
 
@@ -62,6 +79,10 @@ const activateAccount = async (minion: MinionAccount, actions: ActivateAction[])
   // check out eth balance
   const balanceAfterActions = await signer.getBalance();
   const updatedMinions = getMinions();
+
+  if (config.skipPostAction) {
+    return updatedMinions;
+  }
 
   const recipientMinion = getNextAccount(updatedMinions);
   let balanceOut = balanceAfterActions;
@@ -75,7 +96,7 @@ const activateAccount = async (minion: MinionAccount, actions: ActivateAction[])
   updateMinion(updatedMinion);
 
   console.log('🔥 activated account fee:', updatedMinion.totalFee);
-  console.log('🔥', `Minion: ${minion.id} done. Funds send to next account.`);
+  console.log('✅', `Minion: ${minion.id} done. Funds send to next account. ✅`);
 
   return updatedMinions;
 };
