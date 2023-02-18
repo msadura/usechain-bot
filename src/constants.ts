@@ -1,4 +1,5 @@
 import { NetworkType } from '@app/types';
+import { ethers } from 'ethers';
 
 const safeEnv = (defaultEnv: string | undefined, env?: string) => {
   return env || defaultEnv;
@@ -15,3 +16,5 @@ export const MAX_GAS_PRICE = 0;
 export const GAS_WAIT_TIME = 10000;
 export const MIN_WALLET_BALANCE = '0.005';
 export const SEND_GAS_LIMIT = 449000; // 21k for ETH mainnet, 499k for argitrum, 21k FTM
+
+export const MAX_APPROVE_AMOUNT = ethers.constants.MaxUint256;
