@@ -1,6 +1,6 @@
 import { transferEthFromWallet } from '@app/utils/transferEthFromWallet';
 import { ActivateAction } from './types/index';
-import { updateMinion } from './../minions/minions';
+import { getNextAccount, updateMinion } from '@app/minions/minions';
 import { getProvider } from '@app/blockchain/provider';
 import { GAS_WAIT_TIME, MAX_GAS_PRICE, MIN_WALLET_BALANCE } from '@app/constants';
 import { MinionAccount, getMinions } from '@app/minions/minions';
@@ -30,18 +30,6 @@ export const activateAccounts = async (actions: ActivateAction[], config: Config
 
     minions = res ? res : getMinions();
   }
-};
-
-const getNextAccount = (minions: MinionAccount[], getRecipient = false) => {
-  const idx = minions.findIndex(m => m.done !== true);
-  if (idx < 0) {
-    return;
-  }
-
-  const minionIndex = getRecipient ? idx + 1 : idx;
-  const minion = minions[minionIndex];
-
-  return minion;
 };
 
 const activateAccount = async (
@@ -112,6 +100,7 @@ export const isGasTooHigh = async () => {
 };
 
 export const checkBalance = (balance: BigNumber) => {
+  console.log('🔥', formatEther(balance), MIN_WALLET_BALANCE);
   if (balance.lt(parseEther(MIN_WALLET_BALANCE))) {
     throw 'Account balance too low. Throwing for safety reason.';
   }

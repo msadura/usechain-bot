@@ -7,7 +7,6 @@ import { connectProvider, getProvider } from '@app/blockchain/provider';
 import { activateArbitrumAccounts } from '@app/arbitrum/arbitrum';
 import { generateMinions, getMinions } from '@app/minions/minions';
 import { sendEthFromMinion } from '@app/utils/sendEthFromMinion';
-import { activateEpsylonFTMAccounts } from '@app/fantom/epsylon/epsylon';
 import { sendUSDCFromMinion } from '@app/fantom/epsylon/utils/sendUSDCFromMinion';
 import { getQuoteExactOutputSingle } from '@app/trade/uniswap/quoter';
 import { WETH } from '@app/arbitrum/constants';
@@ -23,12 +22,11 @@ async function main() {
 
   // 3) Uncomment to active generated minions
   // activateArbitrumAccounts();
-  // activateEpsylonFTMAccounts();
 
   // 4) You can send back ETH to desired address or other minion by running:
   // const minions = getMinions();
-  // const recipient = minions[10].address;
-  // await sendEthFromMinion(7, recipient);
+  // const recipient = minions[0].address;
+  // await sendEthFromMinion(99, recipient);
   // await sendUSDCFromMinion(7, recipient);
 }
 

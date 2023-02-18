@@ -80,3 +80,15 @@ export const updateMinion = (minion: MinionAccount) => {
 export const saveMinions = (minionsData: MinionAccount[]) => {
   fs.writeFileSync(addressBookFile, JSON.stringify(minionsData, null, 4));
 };
+
+export const getNextAccount = (minions: MinionAccount[], getRecipient = false) => {
+  const idx = minions.findIndex(m => m.done !== true);
+  if (idx < 0) {
+    return;
+  }
+
+  const minionIndex = getRecipient ? idx + 1 : idx;
+  const minion = minions[minionIndex];
+
+  return minion;
+};

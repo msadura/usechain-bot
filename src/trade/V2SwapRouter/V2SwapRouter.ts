@@ -7,6 +7,8 @@ import { formatUnits } from 'ethers/lib/utils';
 import { isTokenApproved } from '@app/trade/utils';
 import { TradeAsset } from '@app/types';
 
+const MAX_APPROVE_AMOUNT = ethers.constants.MaxUint256;
+
 type Config = {
   assetIn: TradeAsset;
   assetOut: TradeAsset;
@@ -61,7 +63,7 @@ export const V2SwapRouter = async ({
 
     if (!isApproved) {
       console.log('🔥', 'Approving token');
-      const approvalTx = await tokenInContract.approve(swapRouterAddress, amountIn);
+      const approvalTx = await tokenInContract.approve(swapRouterAddress, MAX_APPROVE_AMOUNT);
       await approvalTx.wait();
     }
 
