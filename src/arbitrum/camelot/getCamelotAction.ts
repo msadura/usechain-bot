@@ -43,21 +43,25 @@ export const CamelotTrade = async ({
 
   const minOut = 0;
   // grail routes through USDC
-  const path = [assetIn.address, USDC.address, assetOut.address];
+  const path = [assetIn.address, assetOut.address];
   const recipient = signer.address;
   const deadline = Math.floor(Date.now() / 1000) + 60 * 10; // 10min
+
+  const amountsOut = await swapRouterContract.getAmountsOut(amountIn, path);
+  const amountOut = [...amountsOut].pop().div(100).mul(90); // max 5% slippage
 
   let tradeTx: TransactionResponse | null = null;
   if (isETHIn) {
     console.log('🔥', 'Selling eth');
     tradeTx = await swapRouterContract.swapExactETHForTokensSupportingFeeOnTransferTokens(
-      minOut,
+      amountOut,
       path,
       recipient,
+      '0x7d3019a42Dc5729852F643f540170a27727c7C80', // referrer
       deadline,
       {
-        value: amountIn,
-        gasLimit: ethers.utils.hexlify(1000000)
+        value: amountIn
+        // gasLimit: ethers.utils.hexlify(1000000)
       }
     );
   } else {
@@ -80,9 +84,10 @@ export const CamelotTrade = async ({
       minOut,
       path,
       recipient,
+      '0x7d3019a42Dc5729852F643f540170a27727c7C80',
       deadline,
       {
-        gasLimit: ethers.utils.hexlify(1000000)
+        // gasLimit: ethers.utils.hexlify(1000000)
       }
     );
   }

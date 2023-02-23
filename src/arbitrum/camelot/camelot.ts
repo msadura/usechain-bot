@@ -1,4 +1,4 @@
-import { WETH } from '@app/arbitrum/constants';
+import { USDC, WETH } from '@app/arbitrum/constants';
 import { activateAccounts } from '@app/actions/activateAccounts';
 import { ActivateAction } from '@app/actions/types';
 import { getCamelotAction } from '@app/arbitrum/camelot/getCamelotAction';
@@ -15,14 +15,14 @@ export const getCamelotActions = (): ActivateAction[] => {
   // Buy USDC for ETH on camelot
   const sellWeth = getCamelotAction({
     assetIn: WETH,
-    assetOut: GRAIL,
+    assetOut: USDC,
     wethAddress: WETH.address,
     swapRouterAddress: CAMELOT_CONTRACT_ADDRESS
   });
 
   // Sell back USDC for ETH
   const buyWeth = getCamelotAction({
-    assetIn: GRAIL,
+    assetIn: USDC,
     assetOut: WETH,
     wethAddress: WETH.address,
     swapRouterAddress: CAMELOT_CONTRACT_ADDRESS

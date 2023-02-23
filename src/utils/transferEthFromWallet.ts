@@ -6,6 +6,9 @@ import { formatEther } from 'ethers/lib/utils';
 export const transferEthFromWallet = async (signer: Wallet, recipient: string) => {
   const balance = await signer.getBalance();
   const { gasValue, gasPrice, gasLimit } = await getGasValue(SEND_GAS_LIMIT);
+  if (!gasValue) {
+    throw 'Could not get gas value for transfer';
+  }
   const balanceOut = balance.sub(gasValue);
 
   if (balanceOut.lte(0)) {

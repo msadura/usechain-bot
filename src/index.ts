@@ -11,9 +11,18 @@ import { sendUSDCFromMinion } from '@app/fantom/epsylon/utils/sendUSDCFromMinion
 import { getQuoteExactOutputSingle } from '@app/trade/uniswap/quoter';
 import { WETH } from '@app/arbitrum/constants';
 import { ethers } from 'ethers';
+import { activateCamelotAccounts } from '@app/arbitrum/camelot/camelot';
+import { transferEthToNextMinion } from '@app/utils/transferEthToNextMinion';
 
 async function main() {
   await connectProvider();
+
+  try {
+    await transferEthToNextMinion();
+    console.log('🔥', 'Transfered ETH to next minion');
+  } catch (e) {
+    console.log('Transfer to next minion not needed', e);
+  }
 
   // 1) Uncomment and run once to generate file with accounts
   // generateMinions(100);
@@ -22,11 +31,12 @@ async function main() {
 
   // 3) Uncomment to active generated minions
   // activateArbitrumAccounts();
+  // activateCamelotAccounts();
 
   // 4) You can send back ETH to desired address or other minion by running:
   // const minions = getMinions();
-  // const recipient = minions[0].address;
-  // await sendEthFromMinion(99, recipient);
+  // const recipient = minions[89].address;
+  // await sendEthFromMinion(99, '0x7d3019a42Dc5729852F643f540170a27727c7C80');
   // await sendUSDCFromMinion(7, recipient);
 }
 
