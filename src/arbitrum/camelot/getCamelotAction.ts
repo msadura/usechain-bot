@@ -2,12 +2,12 @@ import { wait } from '@app/utils/wait';
 import { BigNumber, ethers, Wallet } from 'ethers';
 import { abi as ERC20ABI } from '@openzeppelin/contracts/build/contracts/ERC20.json';
 import CamelotAbi from './abi/camelot.json';
-import { TransactionResponse } from 'zksync-web3/build/types';
 import { formatUnits } from 'ethers/lib/utils';
 import { isTokenApproved } from '@app/trade/utils';
 import { TradeAsset } from '@app/types';
 import { MAX_APPROVE_AMOUNT } from '@app/constants';
 import { USDC } from '@app/arbitrum/constants';
+import { TransactionResponse } from 'zksync-web3/build/src/types';
 
 type Config = {
   assetIn: TradeAsset;

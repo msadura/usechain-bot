@@ -13,16 +13,17 @@ import { WETH } from '@app/arbitrum/constants';
 import { ethers } from 'ethers';
 import { activateCamelotAccounts } from '@app/arbitrum/camelot/camelot';
 import { transferEthToNextMinion } from '@app/utils/transferEthToNextMinion';
+import { test } from '@app/zkSync/test';
 
 async function main() {
-  await connectProvider();
+  // await connectProvider();
 
-  try {
-    await transferEthToNextMinion();
-    console.log('🔥', 'Transfered ETH to next minion');
-  } catch (e) {
-    console.log('Transfer to next minion not needed', e);
-  }
+  // try {
+  //   await transferEthToNextMinion();
+  //   console.log('🔥', 'Transfered ETH to next minion');
+  // } catch (e) {
+  //   console.log('Transfer to next minion not needed', e);
+  // }
 
   // 1) Uncomment and run once to generate file with accounts
   // generateMinions(100);
@@ -38,6 +39,8 @@ async function main() {
   // const recipient = minions[89].address;
   // await sendEthFromMinion(99, '0x7d3019a42Dc5729852F643f540170a27727c7C80');
   // await sendUSDCFromMinion(7, recipient);
+
+  await test();
 }
 
 main();

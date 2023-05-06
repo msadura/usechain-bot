@@ -2,10 +2,11 @@ import { wait } from '@app/utils/wait';
 import { BigNumber, ethers, Wallet } from 'ethers';
 import UniswapV2RouterABI from '@app/trade/uniswap/abi/UniswapV2SwapRouter02.json';
 import { abi as ERC20ABI } from '@openzeppelin/contracts/build/contracts/ERC20.json';
-import { TransactionResponse } from 'zksync-web3/build/types';
+
 import { formatUnits } from 'ethers/lib/utils';
 import { isTokenApproved } from '@app/trade/utils';
 import { TradeAsset } from '@app/types';
+import { TransactionResponse } from 'zksync-web3/build/src/types';
 
 const MAX_APPROVE_AMOUNT = ethers.constants.MaxUint256;
 

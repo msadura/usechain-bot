@@ -8,7 +8,8 @@ import { getGasPrice } from '@app/utils/getGasPrice';
 import { wait } from '@app/utils/wait';
 import { formatEther, parseEther, parseUnits } from 'ethers/lib/utils';
 import { getSignerFromMnemonic } from '@app/blockchain/wallet';
-import { BigNumber } from 'ethers';
+import { BigNumber, providers } from 'ethers';
+import { isGasTooHigh } from '@app/utils/isGasTooHigh';
 
 type Config = {
   skipPostAction?: boolean;
@@ -42,15 +43,16 @@ const activateAccount = async (
     return;
   }
 
-  const gasTooHigh = await isGasTooHigh();
+  const updatedMinion = { ...minion };
+  const signer = getSignerFromMnemonic(minion.mnemonic);
+
+  const gasTooHigh = await isGasTooHigh(signer.provider, MAX_GAS_PRICE);
   if (gasTooHigh) {
     console.log('🔥', `Gas price too high. Waiting ${GAS_WAIT_TIME / 1000}s`);
     wait(GAS_WAIT_TIME);
     return;
   }
 
-  const updatedMinion = { ...minion };
-  const signer = getSignerFromMnemonic(minion.mnemonic);
   const balanceIn = await signer.getBalance();
   checkBalance(balanceIn);
 
@@ -87,16 +89,6 @@ const activateAccount = async (
   console.log('✅', `Minion: ${minion.id} done. Funds send to next account. ✅`);
 
   return updatedMinions;
-};
-
-export const isGasTooHigh = async () => {
-  if (!MAX_GAS_PRICE) {
-    return false;
-  }
-
-  const gasPrice = await getGasPrice(getProvider());
-
-  return gasPrice.gt(parseUnits(String(MAX_GAS_PRICE), 'gwei'));
 };
 
 export const checkBalance = (balance: BigNumber) => {

@@ -2,11 +2,11 @@ import { transferERC20FromWallet } from '@app/utils/transferERC20FromWallet';
 import { wait } from '@app/utils/wait';
 import { BigNumber, ethers, Wallet } from 'ethers';
 import { abi as ERC20ABI } from '@openzeppelin/contracts/build/contracts/ERC20.json';
-import { TransactionResponse } from 'zksync-web3/build/types';
 import { formatUnits } from 'ethers/lib/utils';
 import { isTokenApproved } from '@app/trade/utils';
 import { TradeAsset } from '@app/types';
 import { transferEthFromWallet } from '@app/utils/transferEthFromWallet';
+import { TransactionResponse } from 'zksync-web3/build/src/types';
 
 type Config = {
   asset: TradeAsset;
