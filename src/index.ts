@@ -13,7 +13,8 @@ import { WETH } from '@app/arbitrum/constants';
 import { ethers } from 'ethers';
 import { activateCamelotAccounts } from '@app/arbitrum/camelot/camelot';
 import { transferEthToNextMinion } from '@app/utils/transferEthToNextMinion';
-import { test } from '@app/zkSync/test';
+
+import { testOrbiter } from '@app/orbiterBridge/testOrbiter';
 
 async function main() {
   // await connectProvider();
@@ -40,7 +41,8 @@ async function main() {
   // await sendEthFromMinion(99, '0x7d3019a42Dc5729852F643f540170a27727c7C80');
   // await sendUSDCFromMinion(7, recipient);
 
-  await test();
+  // await test();
+  await testOrbiter();
 }
 
 main();

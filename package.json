@@ -24,6 +24,7 @@
     "@uniswap/sdk": "^3.0.3",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/v3-sdk": "^3.8.3",
+    "bignumber.js": "^9.1.1",
     "dotenv": "^16.0.0",
     "ethers": "^5.7.0",
     "module-alias": "^2.2.2",

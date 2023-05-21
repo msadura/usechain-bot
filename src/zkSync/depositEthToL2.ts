@@ -1,4 +1,3 @@
-import { getGasPrice } from '@app/utils/getGasPrice';
 import { parseEther } from 'ethers/lib/utils';
 import { Wallet, utils } from 'zksync-web3';
 
