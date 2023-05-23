@@ -4,16 +4,22 @@ import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ethers } from 'ethers';
 
 export const makerConfig = {
-  gasFee: 0.8,
-  tradingFee: 0.0072,
-  slippage: 280,
+  gasFee: 0.2,
+  tradingFee: 0.0021,
   makerAddress: '0xE4eDb277e41dc89aB076a1F049f4a3EfA700bCE8',
   sender: '0xE4eDb277e41dc89aB076a1F049f4a3EfA700bCE8',
-  maxPrice: 3,
+  maxPrice: 10,
   minPrice: 0.005,
   startTime: 0,
   endTime: 99999999999999,
   fromChain: {
+    decimals: 18,
+    id: 1,
+    name: 'Ethereum',
+    symbol: 'ETH',
+    tokenAddress: '0x0000000000000000000000000000000000000000'
+  },
+  toChain: {
     decimals: 18,
     id: 14,
     maxPrice: 3,
@@ -21,23 +27,11 @@ export const makerConfig = {
     name: 'zkSync Era',
     symbol: 'ETH',
     tokenAddress: '0x0000000000000000000000000000000000000000'
-  },
-  toChain: {
-    decimals: 18,
-    id: 1,
-    name: 'Ethereum',
-    symbol: 'ETH',
-    tokenAddress: '0x0000000000000000000000000000000000000000'
   }
 };
 
 export async function orbiterZkToEth(wallet: Wallet) {
   const balanceL2 = await wallet.getBalance();
-
-  if (balanceL2.lte('0.07')) {
-    throw new Error('Not enough funds on L2 to bridge');
-  }
-
   const gasPrice = await wallet.provider.getGasPrice();
   const estimatedGas = await wallet.provider.estimateGas({
     to: makerConfig.makerAddress,
@@ -90,7 +84,7 @@ function getTransferAmount({ transferValue }: { transferValue: string }) {
   const rAmountValue = rAmount.toFixed();
   const amountLength = rAmountValue.toString().length;
   // This is important for bridge to recognize target chain
-  const pText = 9000 + Number(1) + '';
+  const pText = 9000 + Number(makerConfig.toChain.id) + '';
 
   const tAmount = rAmountValue.toString().slice(0, amountLength - pText.length) + pText;
 

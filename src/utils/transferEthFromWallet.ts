@@ -3,9 +3,13 @@ import { getGasValue } from '@app/utils/getGasValue';
 import { Wallet } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
-export const transferEthFromWallet = async (signer: Wallet, recipient: string) => {
+export const transferEthFromWallet = async (
+  signer: Wallet,
+  recipient: string,
+  sendGasLimit = SEND_GAS_LIMIT
+) => {
   const balance = await signer.getBalance();
-  const { gasValue, gasPrice, gasLimit } = await getGasValue(SEND_GAS_LIMIT);
+  const { gasValue, gasPrice, gasLimit } = await getGasValue(sendGasLimit);
   if (!gasValue) {
     throw 'Could not get gas value for transfer';
   }

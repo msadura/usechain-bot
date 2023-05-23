@@ -5,6 +5,10 @@ import { ethers } from 'ethers';
 
 const addressBookFile = path.join(__dirname, `${MINIONS_FILE_NAME}.json`);
 
+function getAddressBookFile(name: string) {
+  return path.join(__dirname, `${name}.json`);
+}
+
 export type MinionAccount = {
   id: number;
   address: string;
@@ -15,8 +19,8 @@ export type MinionAccount = {
   totalFee?: string;
 };
 
-export function generateMinions(numberOfMinions = 1) {
-  const currentMinions = getMinions();
+export function generateMinions(numberOfMinions = 1, filename = MINIONS_FILE_NAME) {
+  const currentMinions = getMinions(filename);
 
   const numToGenerate = numberOfMinions - currentMinions.length;
 
@@ -49,9 +53,9 @@ function generateAccount(id: number): MinionAccount {
   };
 }
 
-export const getMinions = () => {
+export const getMinions = (filename = MINIONS_FILE_NAME) => {
   try {
-    const content = fs.readFileSync(addressBookFile, 'utf8');
+    const content = fs.readFileSync(getAddressBookFile(filename), 'utf8');
     const minions = content ? (JSON.parse(content) as MinionAccount[]) : [];
 
     return minions;
@@ -64,8 +68,8 @@ export const getMinions = () => {
   }
 };
 
-export const updateMinion = (minion: MinionAccount) => {
-  const currentMinions = getMinions();
+export const updateMinion = (minion: MinionAccount, minionsFilename = MINIONS_FILE_NAME) => {
+  const currentMinions = getMinions(minionsFilename);
   const index = currentMinions.findIndex(m => m.id === minion.id);
   if (index < 0) {
     return;
@@ -81,8 +85,12 @@ export const saveMinions = (minionsData: MinionAccount[]) => {
   fs.writeFileSync(addressBookFile, JSON.stringify(minionsData, null, 4));
 };
 
-export const getNextAccount = (minions: MinionAccount[], getRecipient = false) => {
-  const idx = minions.findIndex(m => m.done !== true);
+export const getNextAccount = (
+  minions: MinionAccount[],
+  getRecipient = false,
+  doneProeprty = 'done'
+) => {
+  const idx = minions.findIndex(m => (m as any)[doneProeprty] !== true);
   if (idx < 0) {
     return;
   }
