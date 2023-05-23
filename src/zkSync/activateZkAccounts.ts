@@ -60,7 +60,7 @@ const activateAccount = async (
     return;
   }
 
-  const balanceIn = await signer.getBalance();
+  const balanceIn = await signer.getBalanceL1();
   checkBalance(balanceIn);
 
   updatedMinion.amountIn = formatEther(balanceIn);
@@ -72,31 +72,13 @@ const activateAccount = async (
   }
 
   if (config.postAction) {
-    // post action
+    await config.postAction({ wallet: signer, recipient, minionsFilename, minion });
     return getMinions(minionsFilename);
   }
 
   updatedMinion.done = true;
   updateMinion(updatedMinion, minionsFilename);
   const updatedMinions = getMinions(minionsFilename);
-
-  // check out eth balance
-  // const balanceAfterActions = await signer.getBalance();
-
-  // if (config.skipPostAction) {
-  //   return updatedMinions;
-  // }
-
-  // const recipientMinion = getNextAccount(updatedMinions);
-  // let balanceOut = balanceAfterActions;
-  // if (recipientMinion) {
-  //   balanceOut = await transferEthFromWallet(signer, recipientMinion.address);
-  // }
-
-  // updatedMinion.amountOut = formatEther(balanceOut);
-  // updatedMinion.totalFee = formatEther(balanceIn.sub(balanceOut));
-  // updatedMinion.done = true;
-  // updateMinion(updatedMinion);
 
   console.log('🔥 activated account fee:', updatedMinion.totalFee);
   console.log('✅', `Minion: ${minion.id} done. Funds send to next account. ✅`);

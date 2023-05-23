@@ -10,7 +10,9 @@ import { Wallet } from 'zksync-web3';
 
 const bridgeZkAction: ActivateZkAction = async (wallet: Wallet) => {
   // bridge from eth to zk
-  await depositEthToL2(wallet);
+  const balance = wallet.getBalanceL1();
+  const depositBalance = (await balance).div(100).mul(80);
+  await depositEthToL2(wallet, formatEther(depositBalance));
   await wait(5000);
 
   // bridge back to L1
@@ -21,11 +23,13 @@ const bridgeZkAction: ActivateZkAction = async (wallet: Wallet) => {
 
 const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion, minionsFilename }) => {
   // move funds on L1 account
-
-  // updateMinion(updatedMinion, minionsFilename);
+  console.log('🔥', 'POST ACTION...');
   const updatedMinions = getMinions(minionsFilename);
   const updatedMinion = updatedMinions[minion.id];
   const balanceIn = parseEther(minion.amountIn || '0');
+
+  updatedMinion.done = true;
+  updateMinion(updatedMinion, minionsFilename);
 
   // check out eth balance
   const balanceAfterActions = await wallet.getBalanceL1();
@@ -39,7 +43,10 @@ const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion, min
   updatedMinion.amountOut = formatEther(balanceOut);
   updatedMinion.totalFee = formatEther(balanceIn.sub(balanceOut));
   updatedMinion.done = true;
-  updateMinion(updatedMinion);
+  updateMinion(updatedMinion, minionsFilename);
+
+  console.log('🔥 activated account fee:', updatedMinion.totalFee);
+  console.log('✅', `Minion: ${minion.id} done. Funds send to next account. ✅`);
 };
 
 export const activateZkBridgeAccounts = async () => {

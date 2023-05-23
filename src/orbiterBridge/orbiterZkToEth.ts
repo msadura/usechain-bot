@@ -34,7 +34,7 @@ export const makerConfig = {
 export async function orbiterZkToEth(wallet: Wallet) {
   const balanceL2 = await wallet.getBalance();
 
-  if (balanceL2.lte('0.07')) {
+  if (balanceL2.lte(parseEther('0.07'))) {
     throw new Error('Not enough funds on L2 to bridge');
   }
 

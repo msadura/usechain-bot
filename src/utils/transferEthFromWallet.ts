@@ -9,7 +9,11 @@ export const transferEthFromWallet = async (
   sendGasLimit = SEND_GAS_LIMIT
 ) => {
   const balance = await signer.getBalance();
-  const { gasValue, gasPrice, gasLimit } = await getGasValue(sendGasLimit);
+
+  const { gasValue, gasPrice, gasLimit } = await getGasValue({
+    gasLimit: sendGasLimit,
+    provider: signer.provider
+  });
   if (!gasValue) {
     throw 'Could not get gas value for transfer';
   }

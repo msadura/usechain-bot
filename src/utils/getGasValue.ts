@@ -1,13 +1,21 @@
 import { getProvider } from '@app/blockchain/provider';
-import { BigNumber } from 'ethers';
+import { BigNumber, providers } from 'ethers';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
 
-export async function getGasValue(gasLimit = 21000, gasPrice?: null | BigNumber | number | string) {
+export async function getGasValue({
+  gasLimit = 21000,
+  gasPrice,
+  provider
+}: {
+  gasLimit: number;
+  provider: providers.Provider;
+  gasPrice?: null | BigNumber | number | string;
+}) {
   let price = gasPrice;
   let maxFeePerGas: BigNumber | undefined;
 
   if (!price) {
-    const data = await getProvider().getFeeData();
+    const data = await provider.getFeeData();
     price = data.gasPrice ?? undefined;
     maxFeePerGas = data.maxFeePerGas ?? undefined;
 
