@@ -1,3 +1,4 @@
+import { waitForZkFunds } from '@app/zkSync/waitForL2Funds';
 import { parseEther } from 'ethers/lib/utils';
 import { Wallet, utils } from 'zksync-web3';
 
@@ -11,7 +12,12 @@ export async function depositEthToL2(wallet: Wallet, amount: string) {
 
   console.log('🔥', 'ETH deposit transaction submitted:', tx.hash);
   console.log('🔥', 'Waiting for confirmation on L2...');
-  await tx.wait();
 
-  console.log('🔥', 'ETH deposit transaction completed:', tx.hash);
+  try {
+    await tx.wait();
+    console.log('🔥', 'ETH deposit transaction completed:', tx.hash);
+  } catch (e) {
+  } finally {
+    await waitForZkFunds(wallet, amount);
+  }
 }

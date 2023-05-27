@@ -3,29 +3,29 @@ import BigNumber from 'bignumber.js';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ethers } from 'ethers';
 import { getDigitByPrecision, getTransferAmount } from '@app/orbiterBridge/utils';
-import { OrbitermakerConfig } from '@app/orbiterBridge/types';
+import { waitForZkFunds } from '@app/zkSync/waitForL2Funds';
 
-export const makerConfig: OrbitermakerConfig = {
+export const makerConfig = {
   id: '',
   makerId: '',
   ebcId: '',
-  slippage: 280,
-  makerAddress: '0x80C67432656d59144cEFf962E8fAF8926599bCF8',
-  sender: '0x80C67432656d59144cEFf962E8fAF8926599bCF8',
-  tradingFee: 0.006,
-  gasFee: 1,
+  slippage: 0,
+  makerAddress: '0xee73323912a4e3772B74eD0ca1595a152b0ef282',
+  sender: '0xee73323912a4e3772B74eD0ca1595a152b0ef282',
+  tradingFee: 0.0021,
+  gasFee: 0.2,
   fromChain: {
-    id: 14,
-    name: 'zkSync Era',
+    id: 1,
+    name: 'Ethereum',
     tokenAddress: '0x0000000000000000000000000000000000000000',
     symbol: 'ETH',
     decimals: 18,
     minPrice: 0.005,
-    maxPrice: 3
+    maxPrice: 10
   },
   toChain: {
-    id: 1,
-    name: 'Ethereum',
+    id: 14,
+    name: 'zkSync Era',
     tokenAddress: '0x0000000000000000000000000000000000000000',
     symbol: 'ETH',
     decimals: 18
@@ -34,17 +34,17 @@ export const makerConfig: OrbitermakerConfig = {
   crossAddress: {}
 };
 
-export async function orbiterZkToEth(wallet: Wallet) {
-  const balanceL2 = await wallet.getBalance();
-
-  if (balanceL2.lte(parseEther('0.07'))) {
-    throw new Error('Not enough funds on L2 to bridge');
+export async function orbiterEthToZk(wallet: Wallet, sendAmount?: string) {
+  if (!wallet.providerL1) {
+    throw new Error('No provider for L1');
   }
 
   const { fromChain } = makerConfig;
 
-  const gasPrice = await wallet.provider.getGasPrice();
-  const estimatedGas = await wallet.provider.estimateGas({
+  const balanceL1 = await wallet.getBalanceL1();
+  const balanceL2 = await wallet.getBalance();
+  const gasPrice = await wallet.providerL1.getGasPrice();
+  const estimatedGas = await wallet.providerL1.estimateGas({
     to: makerConfig.makerAddress,
     from: wallet.address
   });
@@ -56,6 +56,7 @@ export async function orbiterZkToEth(wallet: Wallet) {
   }
   const gas = new BigNumber(gasPrice.toString()).multipliedBy(finalEstimatedGas);
   const gasFee = gas.dividedBy(10 ** 18).toString();
+  console.log('🔥 gas fee:', gasFee);
 
   // conditions from orbiter
   const avalibleDigit = getDigitByPrecision(fromChain.decimals);
@@ -67,7 +68,7 @@ export async function orbiterZkToEth(wallet: Wallet) {
   }
 
   // gas and fee calculations from orbiter
-  const userBalance = new BigNumber(formatEther(balanceL2.toString()))
+  const userBalance = new BigNumber(formatEther(balanceL1.toString()))
     .minus(new BigNumber(makerConfig.tradingFee))
     .minus(new BigNumber(opBalance))
     .minus(new BigNumber(gasFee))
@@ -78,7 +79,7 @@ export async function orbiterZkToEth(wallet: Wallet) {
     : new BigNumber(0);
 
   // formatted eth value
-  const userMaxString = userMax.toString();
+  const userMaxString = sendAmount || userMax.toString();
 
   console.log('🔥 max to bridge:', userMaxString);
 
@@ -86,30 +87,17 @@ export async function orbiterZkToEth(wallet: Wallet) {
   const amount = new BigNumber(transferRawAmount).dividedBy(10 ** 18).toString();
   console.log('🔥 transfer amount with fees:', amount);
 
-  console.log('🔥', 'sending L2 tx...');
+  console.log('🔥', 'sending L1 tx...');
   // send to bridge
-  const tx = await wallet.transfer({
+  const l1Wallet = wallet.ethWallet();
+  const tx = await l1Wallet.sendTransaction({
+    from: l1Wallet.address,
     to: makerConfig.makerAddress,
-    amount: ethers.utils.parseEther(amount)
+    value: ethers.utils.parseEther(amount),
+    // transfer gas limit for ETH mainnet is  always 21000
+    gasLimit: 21000
   });
   await tx.wait();
 
-  await waitForL1Funds(wallet, userMaxString);
-}
-
-async function waitForL1Funds(wallet: Wallet, initBalance?: string): Promise<void> {
-  console.log('🔥', 'Waiting for L1 funds...');
-  const compareBalance = initBalance ? parseEther(initBalance) : await wallet.getBalanceL1();
-  // TODO - throw if it takes too long
-
-  return new Promise(resolve => {
-    const interval = setInterval(async () => {
-      const balance = await wallet.getBalanceL1();
-      if (balance.gt(compareBalance)) {
-        clearInterval(interval);
-        console.log('🔥', 'L1 funds received!');
-        resolve();
-      }
-    }, 5000);
-  });
+  await waitForZkFunds(wallet, formatEther(balanceL2));
 }

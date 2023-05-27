@@ -1,5 +1,6 @@
 import { GAS_WAIT_TIME } from '@app/constants';
 import { getMinions } from '@app/minions/minions';
+import { orbiterEthToZk } from '@app/orbiterBridge/orbiterEthToZk';
 import { orbiterZkToEth } from '@app/orbiterBridge/orbiterZkToEth';
 import { isGasTooHigh } from '@app/utils/isGasTooHigh';
 import { wait } from '@app/utils/wait';
@@ -10,9 +11,10 @@ import { getZkSyncSignerFromMnemonic } from '@app/zkSync/signer';
 
 export async function testOrbiter() {
   const minions = getMinions();
-  const minion = minions[6];
+  const minion = minions[7];
 
   const wallet = getZkSyncSignerFromMnemonic(minion.mnemonic);
 
+  // await orbiterEthToZk(wallet, '0.1');
   await orbiterZkToEth(wallet);
 }

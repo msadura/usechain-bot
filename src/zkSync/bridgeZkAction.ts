@@ -12,6 +12,7 @@ const bridgeZkAction: ActivateZkAction = async (wallet: Wallet) => {
   // bridge from eth to zk
   const balance = wallet.getBalanceL1();
   const depositBalance = (await balance).div(100).mul(80);
+  // better wait for balance to be updated
   await depositEthToL2(wallet, formatEther(depositBalance));
   await wait(5000);
 
