@@ -7,17 +7,25 @@ import { depositEthToL2 } from '@app/zkSync/depositEthToL2';
 import { ActivateZkAction, PostZkAction } from '@app/zkSync/types';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { Wallet } from 'zksync-web3';
+import { getCachedActions, setCachedActions, resetCache } from '@app/cache/accountCache';
 
 const bridgeZkAction: ActivateZkAction = async (wallet: Wallet) => {
-  // bridge from eth to zk
-  const balance = wallet.getBalanceL1();
-  const depositBalance = (await balance).div(100).mul(80);
   // better wait for balance to be updated
-  await depositEthToL2(wallet, formatEther(depositBalance));
-  await wait(5000);
+  if (!getCachedActions(wallet.address).depositToL2) {
+    // bridge from eth to zk
+    const balance = wallet.getBalanceL1();
+    const depositBalance = (await balance).div(100).mul(80);
+    await depositEthToL2(wallet, formatEther(depositBalance));
+    setCachedActions(wallet.address, { depositToL2: true });
+
+    await wait(5000);
+  }
 
   // bridge back to L1
-  await orbiterZkToEth(wallet);
+  if (!getCachedActions(wallet.address).backToL1) {
+    await orbiterZkToEth(wallet);
+    setCachedActions(wallet.address, { backToL1: true });
+  }
 
   return true;
 };
@@ -28,9 +36,6 @@ const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion, min
   const updatedMinions = getMinions(minionsFilename);
   const updatedMinion = updatedMinions[minion.id];
   const balanceIn = parseEther(minion.amountIn || '0');
-
-  updatedMinion.done = true;
-  updateMinion(updatedMinion, minionsFilename);
 
   // check out eth balance
   const balanceAfterActions = await wallet.getBalanceL1();
@@ -49,7 +54,8 @@ const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion, min
   updatedMinion.done = true;
   updateMinion(updatedMinion, minionsFilename);
 
-  console.log('🔥 activated account fee:', updatedMinion.totalFee);
+  resetCache();
+
   console.log('✅', `Minion: ${minion.id} done. Funds send to next account. ✅`);
 };
 

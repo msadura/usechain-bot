@@ -11,3 +11,4 @@ build/
 !.elasticbeanstalk/*.global.yml
 
 src/minions/*.json
+src/cache/*.json

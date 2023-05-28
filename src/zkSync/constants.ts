@@ -1,1 +1,1 @@
-export const MAX_GAS_PRICE_BRIDGE = 30;
+export const MAX_GAS_PRICE_BRIDGE = 25;

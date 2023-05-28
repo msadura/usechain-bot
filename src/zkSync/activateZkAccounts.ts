@@ -27,7 +27,7 @@ export const activateZkAccounts = async (actions: ActivateZkAction[], config: Co
       break;
     }
 
-    console.log('🔥', `Activating account: ${acc.id}`);
+    console.log('🚀', `Activating account: ${acc.id}`);
     const recipient = getNextAccount(minions, true)?.address || '';
     const res = await activateAccount(acc, actions, recipient, config);
     await wait(5000);
