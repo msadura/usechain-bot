@@ -7,10 +7,16 @@ import { depositEthToL2 } from '@app/zkSync/depositEthToL2';
 import { ActivateZkAction, PostZkAction } from '@app/zkSync/types';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { Wallet } from 'zksync-web3';
-import { getCachedActions, setCachedActions, resetCache } from '@app/cache/accountCache';
+import {
+  getCachedActions,
+  setCachedActions,
+  resetCache,
+  resetCacheOnAccountChange
+} from '@app/cache/accountCache';
 
 const bridgeZkAction: ActivateZkAction = async (wallet: Wallet) => {
-  // better wait for balance to be updated
+  resetCacheOnAccountChange(wallet.address);
+
   if (!getCachedActions(wallet.address).depositToL2) {
     // bridge from eth to zk
     const balance = wallet.getBalanceL1();

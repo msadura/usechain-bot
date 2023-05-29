@@ -18,6 +18,16 @@ export function resetCache() {
   saveCache(EMPTY_CACHE);
 }
 
+export function resetCacheOnAccountChange(id: string) {
+  if (!cache.id) {
+    loadCache();
+  }
+
+  if (cache.id !== id) {
+    saveCache({ ...EMPTY_CACHE, id });
+  }
+}
+
 function saveCache(data: AccountCache) {
   fs.writeFileSync(accountCacheFile, JSON.stringify(data, null, 4));
 }
