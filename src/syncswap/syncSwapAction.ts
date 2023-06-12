@@ -42,7 +42,7 @@ const syncSwapAction: ActivateZkAction = async (wallet: Wallet) => {
 export const postSyncSwapAction: PostZkAction = async ({ wallet, recipient, minion }) => {
   // move funds on L1 account
   console.log('ℹ️', 'POST SYNC SWAP ACTION...');
-  console.log('🔥', minion.amountIn, minion);
+
   const updatedMinions = getMinions();
   const updatedMinion = updatedMinions[minion.id];
   const balanceIn = parseEther(minion.amountIn || '0');
