@@ -5,11 +5,9 @@ export type ActivateZkAction = (wallet: Wallet, recipient: string) => Promise<bo
 export type PostZkAction = ({
   wallet,
   recipient,
-  minion,
-  minionsFilename
+  minion
 }: {
   wallet: Wallet;
   recipient: string;
   minion: MinionAccount;
-  minionsFilename: string;
 }) => Promise<void>;

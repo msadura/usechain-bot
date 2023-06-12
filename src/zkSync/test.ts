@@ -22,5 +22,5 @@ export async function test() {
     return;
   }
 
-  await depositEthToL2(wallet);
+  await depositEthToL2(wallet, '0.01');
 }

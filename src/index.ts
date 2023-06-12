@@ -17,6 +17,7 @@ import { transferEthToNextMinion } from '@app/utils/transferEthToNextMinion';
 import { testOrbiter } from '@app/orbiterBridge/testOrbiter';
 import { activateZkAccounts } from '@app/zkSync/activateZkAccounts';
 import { activateZkBridgeAccounts } from '@app/zkSync/bridgeZkAction';
+import { testSyncSwap } from '@app/syncswap/testSyncSwap';
 
 async function main() {
   // await connectProvider();
@@ -40,7 +41,8 @@ async function main() {
   // await test();
   // await testOrbiter();
 
-  await activateZkBridgeAccounts();
+  // await activateZkBridgeAccounts();
+  await testSyncSwap();
 }
 
 main();

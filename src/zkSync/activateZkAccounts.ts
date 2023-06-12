@@ -16,10 +16,8 @@ type Config = {
   postAction?: PostZkAction;
 };
 
-const minionsFilename = 'zkMinions';
-
 export const activateZkAccounts = async (actions: ActivateZkAction[], config: Config = {}) => {
-  let minions: MinionAccount[] = getMinions(minionsFilename);
+  let minions: MinionAccount[] = getMinions();
 
   let acc: MinionAccount | undefined;
   while ((acc = getNextAccount(minions))) {
@@ -32,7 +30,7 @@ export const activateZkAccounts = async (actions: ActivateZkAction[], config: Co
     const res = await activateAccount(acc, actions, recipient, config);
     await wait(5000);
 
-    minions = res ? res : getMinions(minionsFilename);
+    minions = res ? res : getMinions();
   }
 };
 
@@ -64,7 +62,7 @@ const activateAccount = async (
   checkBalance(balanceIn);
 
   updatedMinion.amountIn = formatEther(balanceIn);
-  updateMinion(updatedMinion, minionsFilename);
+  updateMinion(updatedMinion);
 
   for (const action of actions) {
     await action(signer, recipient);
@@ -72,13 +70,13 @@ const activateAccount = async (
   }
 
   if (config.postAction) {
-    await config.postAction({ wallet: signer, recipient, minionsFilename, minion });
-    return getMinions(minionsFilename);
+    await config.postAction({ wallet: signer, recipient, minion });
+    return getMinions();
   }
 
   updatedMinion.done = true;
-  updateMinion(updatedMinion, minionsFilename);
-  const updatedMinions = getMinions(minionsFilename);
+  updateMinion(updatedMinion);
+  const updatedMinions = getMinions();
 
   console.log('🔥 activated account fee:', updatedMinion.totalFee);
   console.log('✅', `Minion: ${minion.id} done. Funds send to next account. ✅`);

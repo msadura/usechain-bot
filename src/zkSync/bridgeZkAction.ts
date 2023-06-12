@@ -36,10 +36,10 @@ const bridgeZkAction: ActivateZkAction = async (wallet: Wallet) => {
   return true;
 };
 
-const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion, minionsFilename }) => {
+const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion }) => {
   // move funds on L1 account
   console.log('🔥', 'POST ACTION...');
-  const updatedMinions = getMinions(minionsFilename);
+  const updatedMinions = getMinions();
   const updatedMinion = updatedMinions[minion.id];
   const balanceIn = parseEther(minion.amountIn || '0');
 
@@ -58,7 +58,7 @@ const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion, min
   updatedMinion.amountOut = formatEther(balanceOut);
   updatedMinion.totalFee = formatEther(balanceIn.sub(balanceOut));
   updatedMinion.done = true;
-  updateMinion(updatedMinion, minionsFilename);
+  updateMinion(updatedMinion);
 
   resetCache();
 
