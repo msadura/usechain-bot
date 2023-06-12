@@ -17,7 +17,9 @@ import { transferEthToNextMinion } from '@app/utils/transferEthToNextMinion';
 import { testOrbiter } from '@app/orbiterBridge/testOrbiter';
 import { activateZkAccounts } from '@app/zkSync/activateZkAccounts';
 import { activateZkBridgeAccounts } from '@app/zkSync/bridgeZkAction';
-import { testSyncSwap } from '@app/syncswap/testSyncSwap';
+import { testPostSyncSwap, testSyncSwap } from '@app/syncswap/testSyncSwap';
+import { transferZkMinionEth } from '@app/zkSync/transferZkMinionEth';
+import { activateSyncSwapAccounts } from '@app/syncswap/syncSwapAction';
 
 async function main() {
   // await connectProvider();
@@ -38,11 +40,17 @@ async function main() {
   // const recipient = minions[89].address;
   // await sendEthFromMinion(99, '0x7d3019a42Dc5729852F643f540170a27727c7C80');
   // await sendUSDCFromMinion(7, recipient);
+
+  // TESTING
   // await test();
   // await testOrbiter();
+  // await testSyncSwap();
+  // await testPostSyncSwap();
+  // await transferZkMinionEth({ senderId: 1, recipientId: 0 });
 
+  // ZK SYNC ACTIONS
   // await activateZkBridgeAccounts();
-  await testSyncSwap();
+  await activateSyncSwapAccounts();
 }
 
 main();

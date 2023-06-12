@@ -35,6 +35,12 @@ export async function swap({ assetIn, assetOut, wallet }: Params) {
   // swap 80% of the balance
   const amountIn = isETHIn ? getPercentAmount(assetBalance, 80) : assetBalance;
 
+  if (amountIn.isZero()) {
+    throw Error(
+      `🔴 Not enough balance - ${formatUnits(assetBalance, assetIn.decimals)} ${assetIn.name} `
+    );
+  }
+
   // The factory of the Classic Pool.
   const classicPoolFactory = new Contract(
     CLASSIC_POOL_FACTORY_ADDRESS,
