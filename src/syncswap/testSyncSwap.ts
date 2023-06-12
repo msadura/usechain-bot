@@ -12,5 +12,6 @@ export async function testSyncSwap() {
     return;
   }
 
-  await swap({ assetIn: WETH_ASSET, assetOut: USDC_ASSET, wallet });
+  // await swap({ assetIn: WETH_ASSET, assetOut: USDC_ASSET, wallet });
+  await swap({ assetIn: USDC_ASSET, assetOut: WETH_ASSET, wallet });
 }

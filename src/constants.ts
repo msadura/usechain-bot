@@ -18,5 +18,4 @@ export const MIN_WALLET_BALANCE = '0.005';
 export const SEND_GAS_LIMIT = 600000; // 21k for ETH mainnet, 499k for argitrum, 21k FTM
 
 export const MAX_APPROVE_AMOUNT = ethers.constants.MaxUint256;
-
 export const ZERO_ADDRESS = ethers.constants.AddressZero;
