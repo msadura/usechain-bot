@@ -13,6 +13,7 @@ import {
 import { USDC_ASSET, WETH_ASSET } from '@app/syncswap/constants';
 import { swap } from '@app/syncswap/swap';
 import { transferZkEth } from '@app/zkSync/transferZkEth';
+import { BigNumber } from 'ethers';
 
 const KEEP_ACCOUNT_BALANCE = '0.006';
 
@@ -31,6 +32,8 @@ const syncSwapAction: ActivateZkAction = async (wallet: Wallet) => {
     // swap USDC -> ETH
     await swap({ assetIn: USDC_ASSET, assetOut: WETH_ASSET, wallet });
     setCachedActions(wallet.address, { swapToETH: true });
+
+    await wait(5000);
   }
 
   return true;
@@ -39,18 +42,26 @@ const syncSwapAction: ActivateZkAction = async (wallet: Wallet) => {
 export const postSyncSwapAction: PostZkAction = async ({ wallet, recipient, minion }) => {
   // move funds on L1 account
   console.log('ℹ️', 'POST SYNC SWAP ACTION...');
-
+  console.log('🔥', minion.amountIn, minion);
   const updatedMinions = getMinions();
   const updatedMinion = updatedMinions[minion.id];
   const balanceIn = parseEther(minion.amountIn || '0');
 
-  // check out eth L2 balance
-  console.log('ℹ️', 'Transfer L2 ETH to next account...');
-  const balanceOut = await transferZkEth({
-    wallet,
-    recipient,
-    minAccountBalance: KEEP_ACCOUNT_BALANCE
-  });
+  let balanceOut: BigNumber | undefined;
+
+  if (recipient) {
+    // check out eth L2 balance
+    console.log('ℹ️', 'Transfer L2 ETH to next account...');
+    balanceOut = await transferZkEth({
+      wallet,
+      recipient,
+      minAccountBalance: KEEP_ACCOUNT_BALANCE
+    });
+  }
+
+  if (!balanceOut) {
+    balanceOut = await wallet.getBalance();
+  }
 
   updatedMinion.amountOut = formatEther(balanceOut);
   updatedMinion.totalFee = formatEther(balanceIn.sub(balanceOut));
@@ -65,6 +76,7 @@ export const postSyncSwapAction: PostZkAction = async ({ wallet, recipient, mini
 export const activateSyncSwapAccounts = async () => {
   await activateZkAccounts([syncSwapAction], {
     skipPostAction: true,
-    postAction: postSyncSwapAction
+    postAction: postSyncSwapAction,
+    L2ToL2Action: true
   });
 };

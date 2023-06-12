@@ -14,6 +14,7 @@ import { MAX_GAS_PRICE_BRIDGE } from '@app/zkSync/constants';
 type Config = {
   skipPostAction?: boolean;
   postAction?: PostZkAction;
+  L2ToL2Action?: boolean;
 };
 
 export const activateZkAccounts = async (actions: ActivateZkAction[], config: Config = {}) => {
@@ -43,7 +44,7 @@ const activateAccount = async (
   if (minion.done) {
     return;
   }
-
+  const { L2ToL2Action } = config;
   const updatedMinion = { ...minion };
   const signer = getZkSyncSignerFromMnemonic(minion.mnemonic);
 
@@ -51,14 +52,18 @@ const activateAccount = async (
     throw new Error('No provider for L1');
   }
 
-  const gasTooHigh = await isGasTooHigh(signer.providerL1, MAX_GAS_PRICE_BRIDGE);
+  const provider = L2ToL2Action ? signer.provider : signer.providerL1;
+  const gasTooHigh = await isGasTooHigh(provider, MAX_GAS_PRICE_BRIDGE);
+
   if (gasTooHigh) {
     console.log('🔥', `Gas price too high. Waiting ${GAS_WAIT_TIME / 1000}s`);
     await wait(GAS_WAIT_TIME);
     return;
   }
 
-  const balanceIn = await signer.getBalanceL1();
+  const balancePromise = L2ToL2Action ? signer.getBalance() : signer.getBalanceL1();
+  const balanceIn = await balancePromise;
+
   checkBalance(balanceIn);
 
   updatedMinion.amountIn = formatEther(balanceIn);

@@ -46,6 +46,8 @@ async function main() {
   // await testOrbiter();
   // await testSyncSwap();
   // await testPostSyncSwap();
+
+  // ZK HELPERS
   // await transferZkMinionEth({ senderId: 1, recipientId: 0 });
 
   // ZK SYNC ACTIONS
