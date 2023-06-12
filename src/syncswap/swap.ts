@@ -33,7 +33,7 @@ export async function swap({ assetIn, assetOut, wallet }: Params) {
   });
 
   // swap 80% of the balance
-  const amountIn = isETHIn ? getPercentAmount(assetBalance, 80) : assetBalance;
+  const amountIn = isETHIn ? getPercentAmount(assetBalance, 90) : assetBalance;
 
   if (amountIn.isZero()) {
     throw Error(
