@@ -20,6 +20,7 @@ import { activateZkBridgeAccounts } from '@app/zkSync/bridgeZkAction';
 import { testPostSyncSwap, testSyncSwap } from '@app/syncswap/testSyncSwap';
 import { transferZkMinionEth } from '@app/zkSync/transferZkMinionEth';
 import { activateSyncSwapAccounts } from '@app/syncswap/syncSwapAction';
+import { mintsquareTest } from '@app/mintsquare/testMintsquare';
 
 async function main() {
   // await connectProvider();
@@ -53,6 +54,7 @@ async function main() {
   // ZK SYNC ACTIONS
   // await activateZkBridgeAccounts();
   await activateSyncSwapAccounts();
+  await mintsquareTest();
 }
 
 main();

@@ -100,3 +100,9 @@ export const getNextAccount = (
 
   return minion;
 };
+
+export function getMinionByAddress(address: string) {
+  const minions = getMinions();
+
+  return minions.find(m => m.address.toLowerCase() === address.toLowerCase());
+}
