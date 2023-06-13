@@ -12,6 +12,7 @@ const syncSwapAction: ActivateZkAction = async (wallet: Wallet) => {
 
 export const activateMintsquareAccounts = async () => {
   await activateZkAccounts([syncSwapAction], {
-    skipPostAction: true
+    skipPostAction: true,
+    skipBalanceCheck: true
   });
 };

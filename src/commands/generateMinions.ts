@@ -1,21 +1,21 @@
 import '../init';
 import { generateMinions } from '@app/minions/minions';
 
-import readline from 'readline';
+import * as readline from 'readline/promises';
 
-const input = readline.createInterface({
+const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
 export async function action() {
-  input.question(`How many minions do you want to generate? `, async num => {
-    if (Number(num) > 0) {
-      await generateMinions(Number(num));
-    }
+  const num = await rl.question(`How many minions do you want to generate? `);
 
-    input.close();
-  });
+  if (Number(num) > 0) {
+    generateMinions(Number(num));
+  }
+
+  rl.close();
 }
 
 action();

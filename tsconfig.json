@@ -1,19 +1,21 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 14",
+  "display": "Node 18",
 
   "compilerOptions": {
-    "lib": ["es2020"],
-    "module": "commonjs",
-    "target": "es2020",
+    "lib": ["es2022", "ESNext"],
+    "module": "Node16",
+    "target": "es2022",
 
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+
     "noEmit": true,
     "outDir": "./lib",
-    "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/*"]
@@ -21,5 +23,8 @@
   },
   "include": [
     "src/**/*"
-  ]
+  ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }
