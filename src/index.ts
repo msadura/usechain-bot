@@ -7,7 +7,6 @@ import { connectProvider, getProvider } from '@app/blockchain/provider';
 import { activateArbitrumAccounts } from '@app/arbitrum/arbitrum';
 import { generateMinions, getMinions } from '@app/minions/minions';
 import { sendEthFromMinion } from '@app/utils/sendEthFromMinion';
-import { sendUSDCFromMinion } from '@app/fantom/epsylon/utils/sendUSDCFromMinion';
 import { getQuoteExactOutputSingle } from '@app/trade/uniswap/quoter';
 import { WETH } from '@app/arbitrum/constants';
 import { ethers } from 'ethers';
@@ -42,20 +41,17 @@ async function main() {
   // const recipient = minions[89].address;
   // await sendEthFromMinion(99, '0x7d3019a42Dc5729852F643f540170a27727c7C80');
   // await sendUSDCFromMinion(7, recipient);
-
   // TESTING
   // await test();
   // await testOrbiter();
   // await testSyncSwap();
   // await testPostSyncSwap();
-
   // ZK HELPERS
   // await transferZkMinionEth({ senderId: 1, recipientId: 0 });
-
   // ZK SYNC ACTIONS
   // await activateZkBridgeAccounts();
   // await activateSyncSwapAccounts();
-  await activateMintsquareAccounts();
+  // await activateMintsquareAccounts();
 }
 
 main();

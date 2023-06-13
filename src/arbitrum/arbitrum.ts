@@ -1,7 +1,7 @@
-import { ActivateAction } from './../actions/types/index';
+import { ActivateAction } from '../process/types/index';
 import { USDC, SUSHI_ROUTER_ADDRESS, WETH } from '@app/arbitrum/constants';
 import { getV2SwapRouterAction } from '@app/trade/V2SwapRouter/V2SwapRouter';
-import { activateAccounts } from '@app/actions/activateAccounts';
+import { activateAccounts } from '@app/process/activateAccounts';
 
 export const getArbitrumActions = (): ActivateAction[] => {
   // Buy USDC for ETH on sushi

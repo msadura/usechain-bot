@@ -1,6 +1,6 @@
 import { USDC, WETH } from '@app/arbitrum/constants';
-import { activateAccounts } from '@app/actions/activateAccounts';
-import { ActivateAction } from '@app/actions/types';
+import { activateAccounts } from '@app/process/activateAccounts';
+import { ActivateAction } from '@app/process/types';
 import { getCamelotAction } from '@app/arbitrum/camelot/getCamelotAction';
 
 const CAMELOT_CONTRACT_ADDRESS = '0xc873fEcbd354f5A56E00E710B90EF4201db2448d';
