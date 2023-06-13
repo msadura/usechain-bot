@@ -15,6 +15,7 @@ type Config = {
   skipPostAction?: boolean;
   postAction?: PostZkAction;
   L2ToL2Action?: boolean;
+  skipBalanceCheck?: boolean;
 };
 
 export const activateZkAccounts = async (actions: ActivateZkAction[], config: Config = {}) => {
@@ -44,7 +45,7 @@ const activateAccount = async (
   if (minion.done) {
     return;
   }
-  const { L2ToL2Action } = config;
+  const { L2ToL2Action, skipBalanceCheck } = config;
   const updatedMinion = { ...minion };
   const signer = getZkSyncSignerFromMnemonic(minion.mnemonic);
 
@@ -64,7 +65,9 @@ const activateAccount = async (
   const balancePromise = L2ToL2Action ? signer.getBalance() : signer.getBalanceL1();
   const balanceIn = await balancePromise;
 
-  checkBalance(balanceIn);
+  if (!skipBalanceCheck) {
+    checkBalance(balanceIn);
+  }
 
   updatedMinion.amountIn = formatEther(balanceIn);
   updateMinion(updatedMinion);
