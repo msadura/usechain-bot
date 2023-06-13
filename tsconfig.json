@@ -23,7 +23,7 @@
   },
   "include": [
     "src/**/*"
-  ],
+, "commands/**/*"  ],
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   }

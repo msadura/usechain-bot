@@ -1,4 +1,4 @@
-import '../../init';
+import '@app/init';
 
 import { activateSyncSwapAccounts } from '@app/syncswap/syncSwapAction';
 

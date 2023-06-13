@@ -1,4 +1,5 @@
-import '../../init';
+import '@app/init';
+
 import { activateMintsquareAccounts } from '@app/mintsquare/mintsquareAction';
 
 export async function action() {

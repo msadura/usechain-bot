@@ -1,4 +1,4 @@
-import '../init';
+import '@app/init';
 import { generateMinions } from '@app/minions/minions';
 
 import * as readline from 'readline/promises';

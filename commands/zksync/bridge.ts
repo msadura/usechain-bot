@@ -1,4 +1,4 @@
-import '../../init';
+import '@app/init';
 
 import { activateZkBridgeAccounts } from '@app/zkSync/bridgeZkAction';
 
