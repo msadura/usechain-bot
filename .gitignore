@@ -12,3 +12,4 @@ build/
 
 src/minions/*.json
 src/cache/*.json
+src/bitget/depositBook/*.csv
