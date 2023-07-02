@@ -1,5 +1,7 @@
 import { bitgetClient } from '@app/bitget/bitgetClient';
 import { getAddressForId } from '@app/bitget/depositBook/getAddressForId';
+import { getETHBalance } from '@app/bitget/getETHBalance';
+import { waitForDeposit } from '@app/bitget/waitForDeposit';
 
 export async function testBitget() {
   // const info = await bitgetClient.getApiKeyInfo();
@@ -9,14 +11,8 @@ export async function testBitget() {
   // const balance = await bitgetClient.getBalance();
   // console.log('🔥 balance', balance);
 
-  console.log('🔥add', getAddressForId(3));
-  try {
-    const asd = await bitgetClient.getPrivate('/api/spot/v1/wallet/deposit-address', {
-      coin: 'ETH',
-      chain: 'ETH'
-    });
-    console.log('🔥', asd);
-  } catch (e) {
-    console.log('🔥', e);
-  }
+  console.log('🔥acc', getAddressForId(3));
+
+  const bal = await getETHBalance();
+  await waitForDeposit(bal);
 }
