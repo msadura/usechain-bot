@@ -2,8 +2,8 @@ import { SupportedChain } from '@app/e2e/constants';
 import { dappeteer } from '@app/e2e/dappeteer';
 import { addChain } from '@app/e2e/utils/addChain';
 import { wait } from '@app/utils/wait';
-
-import { DappeteerPage } from '@chainsafe/dappeteer';
+import { DappeteerBrowser, DappeteerPage } from '@chainsafe/dappeteer';
+import { BrowserContext, Page } from 'playwright';
 
 export async function setupMMFistAccount({
   seed,
@@ -16,27 +16,22 @@ export async function setupMMFistAccount({
   dappUrl?: string;
   chain?: SupportedChain;
 }) {
-  const { metaMask: mm, browser } = await dappeteer.bootstrap({
+  const browser: DappeteerBrowser<BrowserContext, Page> = (await dappeteer.launch({
+    headless: false
+  })) as unknown as DappeteerBrowser<BrowserContext, Page>;
+  await wait(1000);
+  // await clickOnButton(browser, 'Get Started');
+  const mm = await dappeteer.setupMetaMask(browser, {
     seed,
-    password,
-    headless: false,
-    browser: 'chrome'
+    password
   });
 
-  const dappPage = await browser.newPage();
+  const dappPage: DappeteerPage<Page> = await browser.newPage();
   await dappPage.goto(dappUrl);
 
-  const mmPage = await new Promise<DappeteerPage>((resolve, reject) => {
-    browser
-      .pages()
-      .then(pages => {
-        for (const page of pages) {
-          if (page.url().includes('chrome-extension')) resolve(page);
-        }
-        reject('MetaMask extension not found');
-      })
-      .catch(e => reject(e));
-  });
+  const mmPage = mm.page;
+
+  mmPage.setViewport({ width: 1200, height: 600 });
 
   if (chain) {
     // otherwise will run on eth mainnet

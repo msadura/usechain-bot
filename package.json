@@ -20,7 +20,7 @@
     "build": "tsc --noEmit false"
   },
   "dependencies": {
-    "@chainsafe/dappeteer": "^4.2.0",
+    "@chainsafe/dappeteer": "5.0.0",
     "@openzeppelin/contracts": "^4.6.0",
     "@uniswap/sdk": "^3.0.3",
     "@uniswap/sdk-core": "^3.0.1",

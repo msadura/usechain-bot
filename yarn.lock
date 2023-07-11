@@ -23,10 +23,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@chainsafe/dappeteer@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@chainsafe/dappeteer/-/dappeteer-4.2.0.tgz#bc6aa50f909806091574566e49e61b5c9f767e0e"
-  integrity sha512-S6DFA7AMFYpopoQuLV9WVVjiBcUAahhcBeyl+Pkk150af1idNX+A4jVpflHeecQc4a0vmIVNbgP6zf686XtI/g==
+"@chainsafe/dappeteer@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/dappeteer/-/dappeteer-5.0.0.tgz#573713ab446687c7bd38df06c3c04e914a9d60d1"
+  integrity sha512-SHTsjQXgFiFAf1y23ozKH3vEyzqGvgAYuUhNjWinXXtLrjd/qutAj4ioDW94V41Ryv0TdCUYMJ0ysWlVBBopkA==
   dependencies:
     "@metamask/providers" "^9.1.0"
     fs-extra "^11.1.0"
