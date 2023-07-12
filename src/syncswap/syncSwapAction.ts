@@ -53,7 +53,7 @@ export const postSyncSwapAction: PostZkAction = async ({ wallet, recipient, mini
     console.log('ℹ️', 'Transfer L2 ETH to next account...');
     balanceOut = await transferZkEth({
       wallet,
-      recipient,
+      recipient: recipient.address,
       minAccountBalance: KEEP_ACCOUNT_BALANCE
     });
   }

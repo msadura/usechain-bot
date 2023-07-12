@@ -48,7 +48,7 @@ const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion }) =
   let balanceOut = balanceAfterActions;
   if (recipient) {
     // transfering l1 eth
-    balanceOut = await transferEthFromWallet(wallet.ethWallet(), recipient, {
+    balanceOut = await transferEthFromWallet(wallet.ethWallet(), recipient.address, {
       gasLimit: 21000,
       minGasPrice: 25
     });

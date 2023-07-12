@@ -21,27 +21,32 @@ type Config = {
 export const activateZkAccounts = async (actions: ActivateZkAction[], config: Config = {}) => {
   let minions: MinionAccount[] = getMinions();
 
-  let acc: MinionAccount | undefined;
-  while ((acc = getNextAccount(minions))) {
-    if (!acc) {
+  let minion: MinionAccount | undefined;
+  while ((minion = getNextAccount(minions))) {
+    if (!minion) {
       break;
     }
 
-    console.log('🚀', `Activating account: ${acc.id}`);
-    const recipient = getNextAccount(minions, true)?.address || '';
-    const res = await activateAccount(acc, actions, recipient, config);
+    console.log('🚀', `Activating account: ${minion.id}`);
+    const recipient = getNextAccount(minions, true);
+    const res = await activateAccount({ minion, actions, recipient, config });
     await wait(5000);
 
     minions = res ? res : getMinions();
   }
 };
 
-const activateAccount = async (
-  minion: MinionAccount,
-  actions: ActivateZkAction[],
-  recipient: string,
-  config: Config
-) => {
+const activateAccount = async ({
+  minion,
+  actions,
+  recipient,
+  config
+}: {
+  minion: MinionAccount;
+  actions: ActivateZkAction[];
+  recipient?: MinionAccount;
+  config: Config;
+}) => {
   if (minion.done) {
     return;
   }

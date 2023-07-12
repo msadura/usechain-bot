@@ -1,15 +1,22 @@
 import { activateZkAccounts } from '@app/zkSync/activateZkAccounts';
 import { ActivateZkAction } from '@app/zkSync/types';
 
-import { mint } from '@app/mintsquare/mint';
-import { wait } from '@app/utils/wait';
-import { hasBrowserInstance } from '@app/e2e/browserInstance';
+import { getBrowserInstance, hasBrowserInstance } from '@app/e2e/browserInstance';
+import { setupMMFistAccount } from '@app/e2e/utils/setupMMFirstAccount';
+import { registerRandomDomain } from '@app/zkSyncNameService/registerRandomDomain';
+import { importNextAccount } from '@app/e2e/utils/importNextAccount';
 
-const zkSyncNameServiceAction: ActivateZkAction = async ({ wallet }) => {
-  if (!hasBrowserInstance) {
+const zkSyncNameServiceAction: ActivateZkAction = async ({ minion, recipient }) => {
+  if (!hasBrowserInstance()) {
+    await setupMMFistAccount({ seed: minion.mnemonic, chain: 'ZKSYNC' });
   }
-  await mint({ wallet });
-  await wait(30000);
+
+  await registerRandomDomain();
+  const { mm } = getBrowserInstance();
+
+  if (recipient) {
+    await importNextAccount({ mm, seed: recipient?.mnemonic });
+  }
 
   return true;
 };

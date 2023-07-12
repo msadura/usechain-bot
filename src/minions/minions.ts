@@ -88,9 +88,9 @@ export const saveMinions = (minionsData: MinionAccount[]) => {
 export const getNextAccount = (
   minions: MinionAccount[],
   getRecipient = false,
-  doneProeprty = 'done'
+  doneProperty = 'done'
 ) => {
-  const idx = minions.findIndex(m => (m as any)[doneProeprty] !== true);
+  const idx = minions.findIndex(m => (m as any)[doneProperty] !== true);
   if (idx < 0) {
     return;
   }

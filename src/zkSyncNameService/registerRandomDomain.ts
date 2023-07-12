@@ -1,6 +1,5 @@
+import { getBrowserInstance } from '@app/e2e/browserInstance';
 import { confirmTx } from '@app/e2e/utils/confirmTx';
-import { setupMMFistAccount } from '@app/e2e/utils/setupMMFirstAccount';
-import { MinionAccount } from '@app/minions/minions';
 import { getRandomString } from '@app/utils/getRandomString';
 import { wait } from '@app/utils/wait';
 import { clickOnElement } from '@chainsafe/dappeteer/dist/helpers';
@@ -12,17 +11,15 @@ function getDappUrl(domain: string) {
   return DAPP_URL.replace(':domain:', domain);
 }
 
-export async function registerRandomDomain({ minion }: { minion: MinionAccount }) {
+export async function registerRandomDomain() {
   const domain = getRandomString(7);
   const dappUrl = getDappUrl(domain);
 
-  const { dappPage, mm } = await setupMMFistAccount({
-    seed: minion.mnemonic,
-    dappUrl,
-    chain: 'ZKSYNC'
-  });
+  const { dappPage, mm } = getBrowserInstance();
 
   await dappPage.bringToFront();
+  await dappPage.goto(dappUrl);
+  await wait(1000);
 
   // connnect wallet
   const connectBtn = await dappPage.waitForSelector('//button[contains(text(), "Connect Wallet")]');

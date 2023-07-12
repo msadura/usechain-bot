@@ -7,8 +7,8 @@ export type ActivateZkAction = ({
   minion
 }: {
   wallet: Wallet;
-  recipient: string;
   minion: MinionAccount;
+  recipient?: MinionAccount;
 }) => Promise<boolean>;
 
 export type PostZkAction = ({
@@ -17,6 +17,6 @@ export type PostZkAction = ({
   minion
 }: {
   wallet: Wallet;
-  recipient: string;
+  recipient?: MinionAccount;
   minion: MinionAccount;
 }) => Promise<void>;

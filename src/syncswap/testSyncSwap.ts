@@ -22,5 +22,5 @@ export async function testPostSyncSwap() {
   const minion = minions[0];
 
   const wallet = getZkSyncSignerFromMnemonic(minion.mnemonic);
-  await postSyncSwapAction({ wallet, recipient: minions[1].address, minion });
+  await postSyncSwapAction({ wallet, recipient: minions[1], minion });
 }
