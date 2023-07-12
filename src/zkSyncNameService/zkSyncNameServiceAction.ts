@@ -6,12 +6,12 @@ import { setupMMFistAccount } from '@app/e2e/utils/setupMMFirstAccount';
 import { registerRandomDomain } from '@app/zkSyncNameService/registerRandomDomain';
 import { importNextAccount } from '@app/e2e/utils/importNextAccount';
 
-const zkSyncNameServiceAction: ActivateZkAction = async ({ minion, recipient }) => {
+const zkSyncNameServiceAction: ActivateZkAction = async ({ minion, recipient, wallet }) => {
   if (!hasBrowserInstance()) {
     await setupMMFistAccount({ seed: minion.mnemonic, chain: 'ZKSYNC' });
   }
 
-  await registerRandomDomain();
+  await registerRandomDomain({ wallet });
   const { mm } = getBrowserInstance();
 
   if (recipient) {

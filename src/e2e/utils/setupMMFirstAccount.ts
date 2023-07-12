@@ -6,6 +6,10 @@ import { wait } from '@app/utils/wait';
 import { DappeteerBrowser, DappeteerPage } from '@chainsafe/dappeteer';
 import { BrowserContext, Page } from 'playwright';
 
+const headless = process.env.HEADLESS == 'true';
+
+console.log('🔥 Browser mode:', headless ? 'HEADLESS' : 'HEADED');
+
 export async function setupMMFistAccount({
   seed,
   password = '12345678',
@@ -18,7 +22,7 @@ export async function setupMMFistAccount({
   chain?: SupportedChain;
 }) {
   const browser: DappeteerBrowser<BrowserContext, Page> = (await dappeteer.launch({
-    headless: false
+    headless
   })) as unknown as DappeteerBrowser<BrowserContext, Page>;
   await wait(1000);
   // await clickOnButton(browser, 'Get Started');
