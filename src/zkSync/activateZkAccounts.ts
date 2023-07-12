@@ -73,7 +73,7 @@ const activateAccount = async (
   updateMinion(updatedMinion);
 
   for (const action of actions) {
-    await action(signer, recipient);
+    await action({ wallet: signer, recipient, minion });
     await wait(5000);
   }
 

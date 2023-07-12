@@ -3,8 +3,11 @@ import { ActivateZkAction } from '@app/zkSync/types';
 
 import { mint } from '@app/mintsquare/mint';
 import { wait } from '@app/utils/wait';
+import { hasBrowserInstance } from '@app/e2e/browserInstance';
 
-const syncSwapAction: ActivateZkAction = async ({ wallet }) => {
+const zkSyncNameServiceAction: ActivateZkAction = async ({ wallet }) => {
+  if (!hasBrowserInstance) {
+  }
   await mint({ wallet });
   await wait(30000);
 
@@ -12,7 +15,7 @@ const syncSwapAction: ActivateZkAction = async ({ wallet }) => {
 };
 
 export const activateMintsquareAccounts = async () => {
-  await activateZkAccounts([syncSwapAction], {
+  await activateZkAccounts([zkSyncNameServiceAction], {
     skipPostAction: true,
     skipBalanceCheck: true
   });

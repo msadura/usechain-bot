@@ -1,6 +1,6 @@
-import { registerRandomDomain } from '@app/e2e/zknsDomains/registerRandomDomain';
 import { getMinions } from '@app/minions/minions';
 import { wait } from '@app/utils/wait';
+import { registerRandomDomain } from '@app/zkSyncNameService/registerRandomDomain';
 
 export async function testE2E() {
   const minions = getMinions();

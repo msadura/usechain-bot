@@ -1,3 +1,4 @@
+import { setBrowserInstance } from '@app/e2e/browserInstance';
 import { SupportedChain } from '@app/e2e/constants';
 import { dappeteer } from '@app/e2e/dappeteer';
 import { addChain } from '@app/e2e/utils/addChain';
@@ -38,7 +39,9 @@ export async function setupMMFistAccount({
     await addChain({ dappPage, mm, chain });
   }
 
+  setBrowserInstance({ dappPage, mm, browser });
+
   await wait(1000);
 
-  return { mmPage, mm, dappPage };
+  return { mm, dappPage };
 }

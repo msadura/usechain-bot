@@ -3,7 +3,6 @@ import { wait } from '@app/utils/wait';
 import { activateZkAccounts } from '@app/zkSync/activateZkAccounts';
 import { ActivateZkAction, PostZkAction } from '@app/zkSync/types';
 import { formatEther, parseEther } from 'ethers/lib/utils';
-import { Wallet } from 'zksync-web3';
 import {
   getCachedActions,
   setCachedActions,
@@ -17,7 +16,7 @@ import { BigNumber } from 'ethers';
 
 const KEEP_ACCOUNT_BALANCE = '0.006';
 
-const syncSwapAction: ActivateZkAction = async (wallet: Wallet) => {
+const syncSwapAction: ActivateZkAction = async ({ wallet }) => {
   resetCacheOnAccountChange(wallet.address);
 
   if (!getCachedActions(wallet.address).swapToUSDC) {
