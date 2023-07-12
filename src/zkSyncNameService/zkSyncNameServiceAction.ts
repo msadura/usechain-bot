@@ -21,7 +21,7 @@ const zkSyncNameServiceAction: ActivateZkAction = async ({ minion, recipient }) 
   return true;
 };
 
-export const activateMintsquareAccounts = async () => {
+export const activateZkNSAccounts = async () => {
   await activateZkAccounts([zkSyncNameServiceAction], {
     skipPostAction: true,
     skipBalanceCheck: true
