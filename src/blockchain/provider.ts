@@ -13,5 +13,13 @@ export async function connectProvider() {
 }
 
 export function getProvider() {
+  if (!process.env.INFURA_API_KEY) {
+    throw new Error('INFURA_API_KEY env var is not set');
+  }
+
+  return new ethers.providers.InfuraProvider(1, process.env.INFURA_API_KEY);
+}
+
+export function getConnectedProvider() {
   return provider as ethers.providers.Provider;
 }

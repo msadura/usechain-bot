@@ -16,6 +16,7 @@ export async function importNextAccount({
   password?: string;
 }) {
   const metaMaskPage = mm.page;
+  await metaMaskPage.bringToFront();
 
   await profileDropdownClick(metaMaskPage);
   await clickOnButton(metaMaskPage, 'Lock');
