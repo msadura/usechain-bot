@@ -1,13 +1,9 @@
-import { getBrowserInstance } from '@app/e2e/browserInstance';
-import { importNextAccount } from '@app/e2e/utils/importNextAccount';
-import { MinionAccount } from '@app/minions/minions';
-import { connectWallet } from '@app/rhinofi/utils/connectWallet';
-import { wait } from '@app/utils/wait';
+import { getRhinoClient } from '@app/rhinofi/client/getClient';
+import { register } from '@app/rhinofi/client/register';
+import { Wallet } from 'ethers';
 
-export async function registerAccount({ minion }: { minion: MinionAccount }) {
-  const { mm } = getBrowserInstance();
+export async function registerAccount({ wallet }: { wallet: Wallet }) {
+  const rhinofi = await getRhinoClient(wallet.privateKey);
 
-  await importNextAccount({ mm, seed: minion.mnemonic });
-  await wait(1000);
-  await connectWallet();
+  await register(rhinofi, wallet);
 }

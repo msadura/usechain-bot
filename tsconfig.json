@@ -22,9 +22,10 @@
     }
   },
   "include": [
-    "src/**/*"
-, "commands/**/*"  ],
+    "src/**/*",
+    "commands/**/*"  ],
   "ts-node": {
-    "require": ["tsconfig-paths/register"]
+    "require": ["tsconfig-paths/register"],
+    "files": true
   }
 }
