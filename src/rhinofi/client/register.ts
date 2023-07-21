@@ -1,7 +1,7 @@
 import { RhinoClient } from '@app/rhinofi/client/getClient';
 import { Wallet } from 'ethers';
 
-export async function register(rhinofi: RhinoClient, wallet: Wallet) {
+export async function register({ rhinofi, wallet }: { rhinofi: RhinoClient; wallet: Wallet }) {
   const starkPrivKey = wallet.privateKey.replace(/^0x/, '');
   const keyPair = await rhinofi.stark.createKeyPair(starkPrivKey);
 

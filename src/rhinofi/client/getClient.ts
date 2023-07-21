@@ -20,13 +20,12 @@ export async function getUnsignedClient(
   return await RhinofiClientFactory(web3, config);
 }
 
-export async function getRhinoClient(privateKey: string) {
-  const starkPrivateKey = privateKey.replace(/^0x/, '');
+export async function getRhinoClient(privateKey: string, dtk?: string) {
+  const pk = privateKey.replace(/^0x/, '');
+  const starkPrivateKey = dtk || pk;
 
   const rhinofiConfig = {
     api: 'https://api.rhino.fi',
-    dataApi: 'https://api.rhino.fi',
-    useAuthHeader: true,
     wallet: {
       type: 'tradingKey',
       meta: {
@@ -36,7 +35,20 @@ export async function getRhinoClient(privateKey: string) {
     // Add more variables to override default values
   };
 
-  const rhinofi = await getUnsignedClient(privateKey, rhinofiConfig);
+  const providerETH = new HDWalletProvider(
+    pk,
+    `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
+  );
+
+  const providerZkSync = new HDWalletProvider(pk, 'https://mainnet.era.zksync.io');
+
+  const web3ETH = new Web3(providerETH as any);
+  const web3ZkSync = new Web3(providerZkSync as any);
+
+  const rhinofi = await RhinofiClientFactory(
+    { DEFAULT: web3ETH, ZKSYNC: web3ZkSync },
+    rhinofiConfig
+  );
 
   return rhinofi;
 }

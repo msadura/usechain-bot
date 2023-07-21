@@ -17,19 +17,22 @@ type Config = {
   L2ToL2Action?: boolean;
   skipBalanceCheck?: boolean;
   skipGasCheck?: boolean;
+  skipDoneCheck?: boolean;
 };
 
 export const activateAccounts = async (actions: ActivateAction[], config: Config = {}) => {
   let minions: MinionAccount[] = getMinions();
 
   let minion: MinionAccount | undefined;
-  while ((minion = getNextAccount(minions))) {
+  while (
+    (minion = config.skipDoneCheck ? minions[minion ? minion?.id + 1 : 0] : getNextAccount(minions))
+  ) {
     if (!minion) {
       break;
     }
 
     console.log('🚀', `Activating account: ${minion.id}`);
-    const recipient = getNextAccount(minions, true);
+    const recipient = config.skipDoneCheck ? minions[minion.id + 1] : getNextAccount(minions, true);
     const res = await activateAccount({ minion, actions, recipient, config });
     await wait(5000);
 
@@ -48,11 +51,11 @@ const activateAccount = async ({
   recipient?: MinionAccount;
   config: Config;
 }) => {
-  if (minion.done) {
+  if (minion.done && !config.skipDoneCheck) {
     return;
   }
   const { skipGasCheck, skipBalanceCheck } = config;
-  const updatedMinion = { ...minion };
+
   const signer = getSignerFromMnemonic(minion.mnemonic);
 
   if (!skipGasCheck) {
@@ -71,6 +74,7 @@ const activateAccount = async ({
     checkBalance(balanceIn);
   }
 
+  let updatedMinion = getMinions()[minion.id];
   updatedMinion.amountIn = formatEther(balanceIn);
   updateMinion(updatedMinion);
 
@@ -84,6 +88,7 @@ const activateAccount = async ({
     return getMinions();
   }
 
+  updatedMinion = getMinions()[minion.id];
   updatedMinion.done = true;
   updateMinion(updatedMinion);
   const updatedMinions = getMinions();
