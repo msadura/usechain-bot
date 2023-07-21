@@ -24,18 +24,18 @@ export async function testRhinoClient() {
   const rhinofi = await getRhinoClient(signer.privateKey, minions[1].dtk);
   const rhinofiFunding = await getFundingClient();
 
-  const fundingBalance = await getEthBalance(rhinofiFunding);
+  await getEthBalance(rhinofi);
 
-  // const res2 = await sendEth({
-  //   rhinofi,
-  //   amount: 0.001,
-  //   recipient: getFoundingAddress()
-  // });
+  const res2 = await sendEth({
+    rhinofi: rhinofiFunding,
+    amount: 0.001,
+    recipient: signer.address
+  });
 
   await wait(5000);
-  const fundingBalance2 = await getEthBalance(rhinofiFunding);
+  await getEthBalance(rhinofi);
 
-  console.log('🔥 res2', res2);
+  // console.log('🔥 res2', res2);
   // console.log('🔥', fundingBalance);
   // await register({ rhinofi, wallet: signer });
   // console.log('🔥rrf', rhinofi);
