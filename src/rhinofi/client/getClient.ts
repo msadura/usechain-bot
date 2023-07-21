@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import RhinofiClientFactory from '@rhino.fi/client-js';
 import sw from '@rhino.fi/starkware-crypto';
 
-export type RhinoClient = any;
+export type RhinoClient = Record<string, any>;
 
 export async function getUnsignedClient(
   privateKey: string,
@@ -50,5 +50,5 @@ export async function getRhinoClient(privateKey: string, dtk?: string) {
     rhinofiConfig
   );
 
-  return rhinofi;
+  return rhinofi as RhinoClient;
 }

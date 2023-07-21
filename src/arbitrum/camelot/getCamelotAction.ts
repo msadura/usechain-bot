@@ -104,5 +104,5 @@ export const CamelotTrade = async ({
 };
 
 export const getCamelotAction = (config: Config) => {
-  return (signer: Wallet) => CamelotTrade({ ...config, signer });
+  return ({ wallet }: { wallet: Wallet }) => CamelotTrade({ ...config, signer: wallet });
 };

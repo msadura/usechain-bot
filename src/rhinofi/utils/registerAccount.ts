@@ -5,5 +5,5 @@ import { Wallet } from 'ethers';
 export async function registerAccount({ wallet }: { wallet: Wallet }) {
   const rhinofi = await getRhinoClient(wallet.privateKey);
 
-  await register(rhinofi, wallet);
+  await register({ rhinofi, wallet });
 }

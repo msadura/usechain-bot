@@ -9,6 +9,7 @@ import { ethers } from 'ethers';
 import EthCrypto from 'eth-crypto';
 import { bridgedEthDeposit } from '@app/rhinofi/client/bridgedEthDeposit';
 import { getZkSyncSignerFromMnemonic } from '@app/zkSync/signer';
+import { getFundingClient } from '@app/rhinofi/client/getFundingClient';
 
 export async function testRhinoClient() {
   const minions = getMinions();
@@ -19,6 +20,10 @@ export async function testRhinoClient() {
   // console.log('🔥', qq);
 
   const rhinofi = await getRhinoClient(signer.privateKey, minions[1].dtk);
+  const rhinofiFunding = await getFundingClient();
+
+  const fundingBalance = await getEthBalance(rhinofiFunding);
+  console.log('🔥', fundingBalance);
   // await register({ rhinofi, wallet: signer });
   // console.log('🔥rrf', rhinofi);
   // const res = await getEthBalance(rhinofi);
@@ -31,14 +36,14 @@ export async function testRhinoClient() {
   //   }
   // });
 
-  const bridgeRes = await bridgedEthDeposit({
-    amount: '0.001',
-    chain: 'zksync',
-    wallet: getZkSyncSignerFromMnemonic(minions[1].mnemonic),
-    rhinofi
-  });
+  // const bridgeRes = await bridgedEthDeposit({
+  //   amount: '0.001',
+  //   chain: 'zksync',
+  //   wallet: getZkSyncSignerFromMnemonic(minions[1].mnemonic),
+  //   rhinofi
+  // });
   // console.log('r', rhinofi);
-  console.log('🔥', bridgeRes);
+  // console.log('🔥', bridgeRes);
 
   // console.log('🔥 to be send', formatRhinoEther(res));
   // console.log('🔥', rhinofi);

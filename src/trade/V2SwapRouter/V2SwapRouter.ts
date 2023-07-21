@@ -93,5 +93,5 @@ export const V2SwapRouter = async ({
 };
 
 export const getV2SwapRouterAction = (config: Config) => {
-  return (signer: Wallet) => V2SwapRouter({ ...config, signer });
+  return ({ wallet }: { wallet: Wallet }) => V2SwapRouter({ ...config, signer: wallet });
 };
