@@ -8,6 +8,7 @@ export function getFundingClient() {
   }
 
   const wallet = getSignerFromMnemonic(FUNDING_ACCOUNT_MNEMONIC);
+  console.log('🔥 Funding address:', wallet.address);
 
   return getRhinoClient(wallet.privateKey);
 }
