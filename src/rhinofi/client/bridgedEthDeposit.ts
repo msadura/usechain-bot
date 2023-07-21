@@ -6,8 +6,7 @@ import { waitForEthFunds } from '@app/rhinofi/client/waitForEthFunds';
 import { RhinoClient } from '@app/rhinofi/client/getClient';
 
 const contracts: Record<string, string> = {
-  zksync: '0x1fa66e2B38d0cC496ec51F81c3e05E6A6708986F',
-  mainnet: ''
+  ZKSYNC: '0x1fa66e2B38d0cC496ec51F81c3e05E6A6708986F'
   // other chains if needed
 };
 
@@ -19,7 +18,7 @@ export async function bridgedEthDeposit({
   rhinofi
 }: {
   amount: string;
-  chain: 'zksync' | 'mainnet';
+  chain: 'ZKSYNC';
   wallet: Wallet | ZkWallet;
   waitForFunds?: boolean;
   rhinofi: RhinoClient;
