@@ -10,6 +10,8 @@ import EthCrypto from 'eth-crypto';
 import { bridgedEthDeposit } from '@app/rhinofi/client/bridgedEthDeposit';
 import { getZkSyncSignerFromMnemonic } from '@app/zkSync/signer';
 import { getFundingClient } from '@app/rhinofi/client/getFundingClient';
+import { getFoundingAddress } from '@app/foundingAccount/getFoundingAddress';
+import { wait } from '@app/utils/wait';
 
 export async function testRhinoClient() {
   const minions = getMinions();
@@ -23,7 +25,18 @@ export async function testRhinoClient() {
   const rhinofiFunding = await getFundingClient();
 
   const fundingBalance = await getEthBalance(rhinofiFunding);
-  console.log('🔥', fundingBalance);
+
+  // const res2 = await sendEth({
+  //   rhinofi,
+  //   amount: 0.001,
+  //   recipient: getFoundingAddress()
+  // });
+
+  await wait(5000);
+  const fundingBalance2 = await getEthBalance(rhinofiFunding);
+
+  console.log('🔥 res2', res2);
+  // console.log('🔥', fundingBalance);
   // await register({ rhinofi, wallet: signer });
   // console.log('🔥rrf', rhinofi);
   // const res = await getEthBalance(rhinofi);
