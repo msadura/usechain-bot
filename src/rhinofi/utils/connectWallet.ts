@@ -1,11 +1,12 @@
 import { getBrowserInstance } from '@app/e2e/browserInstance';
 import { signMessage } from '@app/e2e/utils/signMessage';
+import { MinionAccount, updateMinion } from '@app/minions/minions';
 import { closeUserflowModal } from '@app/rhinofi/utils/closeUserflowModal';
 import { wait } from '@app/utils/wait';
 
 const url = 'https://app.rhino.fi/portfolio';
 
-export async function connectWallet() {
+export async function connectWallet({ minion }: { minion: MinionAccount }) {
   const { dappPage, mm } = getBrowserInstance();
 
   await dappPage.bringToFront();
@@ -41,4 +42,12 @@ export async function connectWallet() {
   await signMessage(mm.page);
   await dappPage.bringToFront();
   await closeUserflowModal();
+
+  const localStorageStr = await dappPage.evaluate(() => JSON.stringify(window.localStorage));
+  const localStorage = JSON.parse(localStorageStr);
+
+  // save dtk for later use, only when key was registered in browser
+  const dtk = localStorage[`dtk-${minion.address.toLowerCase()}`];
+  const updatedMinon = { ...minion, dtk };
+  updateMinion(updatedMinon);
 }

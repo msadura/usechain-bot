@@ -16,7 +16,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1",
     "start": "ts-node src/index.ts ",
     "dev": "nodemon src/index.ts",
-    "dev-inspect": "nodemon --inspect-brk=9229 src/index.ts",
+    "inspect": "nodemon --inspect-brk=9229",
     "build": "tsc --noEmit false"
   },
   "dependencies": {
@@ -32,6 +32,7 @@
     "bignumber.js": "^9.1.1",
     "bitget-api": "^1.1.1",
     "dotenv": "^16.0.0",
+    "eth-crypto": "^2.6.0",
     "ethers": "^5.7.0",
     "ipfs-http-client": "^56.0.0",
     "module-alias": "^2.2.2",

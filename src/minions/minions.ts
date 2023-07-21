@@ -17,6 +17,7 @@ export type MinionAccount = {
   amountIn?: string;
   amountOut?: string;
   totalFee?: string;
+  dtk?: string;
 };
 
 export function generateMinions(numberOfMinions = 1, filename = MINIONS_FILE_NAME) {
