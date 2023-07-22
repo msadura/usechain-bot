@@ -25,7 +25,6 @@ export async function swap({ assetIn, assetOut, wallet }: Params) {
 
   const isETHIn = assetIn.address.toLowerCase() === WETH_ADDRESS.toLowerCase();
 
-  console.log('🔥', isETHIn, assetIn.address, WETH_ADDRESS);
   const assetBalance = await getSwapAssetBalance({
     assetIn,
     signer: wallet,
@@ -56,7 +55,15 @@ export async function swap({ assetIn, assetOut, wallet }: Params) {
   const path = [assetIn.address, assetOut.address];
   const recipient = wallet.address;
   const deadline = Math.floor(Date.now() / 1000) + 60 * 10; // 10min
-  const stable = assetOut.stable ? [true, false] : [false, false];
+  const stable = [false, false];
+
+  console.log(
+    '🔥',
+    `Swap ${formatUnits(amountIn, assetIn.decimals)} ${assetIn.name} -> ${formatUnits(
+      minOut,
+      assetOut.decimals
+    )} ${assetOut.name}`
+  );
 
   if (!isETHIn) {
     // swap tokens for eth

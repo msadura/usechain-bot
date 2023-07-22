@@ -98,7 +98,7 @@ const activateAccount = async ({
 };
 
 export const checkBalance = (balance: BigNumber) => {
-  console.log('🔥balance (current / min)', formatEther(balance), MIN_WALLET_BALANCE);
+  console.log(`🔥 acc balance - current: ${formatEther(balance)}  / min ${MIN_WALLET_BALANCE}`);
   if (balance.lt(parseEther(MIN_WALLET_BALANCE))) {
     throw 'Account balance too low. Throwing for safety reason.';
   }

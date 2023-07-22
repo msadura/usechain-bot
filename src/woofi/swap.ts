@@ -82,7 +82,13 @@ export async function swap({ assetIn, assetOut, wallet }: Params) {
     });
   }
 
-  console.log('🔥', `Swap ${assetIn.name} -> ${assetOut.name}`);
+  console.log(
+    '🔥',
+    `Swap ${formatUnits(amountIn, assetIn.decimals)} ${assetIn.name} -> ${formatUnits(
+      minOut,
+      assetOut.decimals
+    )} ${assetOut.name}`
+  );
 
   const response = await router.swap(
     swapAssetIn,
