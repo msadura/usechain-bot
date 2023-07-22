@@ -1,8 +1,4 @@
-import {
-  CLASSIC_POOL_FACTORY_ADDRESS,
-  ROUTER_ADDRESS,
-  WETH_ADDRESS
-} from '@app/syncswap/constants';
+import { CLASSIC_POOL_FACTORY_ADDRESS, ROUTER_ADDRESS } from '@app/syncswap/constants';
 import { TradeAsset } from '@app/types';
 import { Contract, Wallet } from 'zksync-web3';
 import classicPoolFactoryAbi from '@app/syncswap/abi/classicPoolFactory.json';
@@ -14,6 +10,7 @@ import { defaultAbiCoder, formatUnits } from 'ethers/lib/utils';
 import { getPercentAmount } from '@app/utils/getPercentAmount';
 import { getSwapAssetBalance } from '@app/utils/getSwapAssetBalance';
 import { approveMaxToken } from '@app/utils/approveMaxToken';
+import { WETH_ADDRESS } from '@app/zkSync/constants';
 
 type SyncSwapConfig = {
   assetIn: TradeAsset;

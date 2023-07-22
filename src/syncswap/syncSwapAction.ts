@@ -9,10 +9,11 @@ import {
   resetCache,
   resetCacheOnAccountChange
 } from '@app/cache/accountCache';
-import { USDC_ASSET, WETH_ASSET } from '@app/syncswap/constants';
+
 import { swap } from '@app/syncswap/swap';
 import { transferZkEth } from '@app/zkSync/transferZkEth';
 import { BigNumber } from 'ethers';
+import { USDC_ASSET, WETH_ASSET } from '@app/zkSync/constants';
 
 const KEEP_ACCOUNT_BALANCE = '0.006';
 

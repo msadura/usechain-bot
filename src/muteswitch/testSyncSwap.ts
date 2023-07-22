@@ -1,12 +1,11 @@
 import { getMinions } from '@app/minions/minions';
 import { USDC_ASSET, WETH_ASSET } from '@app/zkSync/constants';
-import { swap } from '@app/syncswap/swap';
-import { postSyncSwapAction } from '@app/syncswap/syncSwapAction';
+import { swap } from '@app/muteswitch/swap';
 import { getZkSyncSignerFromMnemonic } from '@app/zkSync/signer';
 
-export async function testSyncSwap() {
+export async function muteTest() {
   const minions = getMinions();
-  const minion = minions[0];
+  const minion = minions[1];
 
   const wallet = getZkSyncSignerFromMnemonic(minion.mnemonic);
   if (!wallet.providerL1) {
@@ -22,5 +21,5 @@ export async function testPostSyncSwap() {
   const minion = minions[0];
 
   const wallet = getZkSyncSignerFromMnemonic(minion.mnemonic);
-  await postSyncSwapAction({ wallet, recipient: minions[1], minion });
+  // await postSyncSwapAction({ wallet, recipient: minions[1], minion });
 }
