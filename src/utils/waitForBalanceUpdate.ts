@@ -1,4 +1,5 @@
 import { Wallet, ethers } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 
 export async function waitForBalanceUpdate({
   wallet,
@@ -18,7 +19,7 @@ export async function waitForBalanceUpdate({
       const balance = await wallet.getBalance();
       if (balance.gt(compareBalance)) {
         clearInterval(interval);
-        console.log('🔥', 'Wallet funds received!');
+        console.log('🔥', 'Wallet funds received! Updated balance:', formatEther(balance));
         resolve();
       }
     }, retryInterval || 5000);
