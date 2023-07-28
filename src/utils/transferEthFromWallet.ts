@@ -1,12 +1,13 @@
 import { SEND_GAS_LIMIT } from '@app/constants';
 import { getGasValue } from '@app/utils/getGasValue';
-import { BigNumber, Wallet } from 'ethers';
-import { formatEther, parseUnits } from 'ethers/lib/utils';
+import { Wallet } from 'ethers';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 
 type SendConfig = {
   gasLimit?: number;
   minGasPrice?: number;
   nonce?: number;
+  minAccountBalance?: string;
 };
 
 export const transferEthFromWallet = async (
@@ -36,7 +37,8 @@ export const transferEthFromWallet = async (
   //   gasPriceToUse = minGasPrice;
   // }
 
-  const balanceOut = balance.sub(gasValue);
+  const minBalance = parseEther(sendConfig?.minAccountBalance || '0');
+  const balanceOut = balance.sub(gasValue).sub(minBalance);
 
   if (balanceOut.lte(0)) {
     throw 'No balance to send to next account';
