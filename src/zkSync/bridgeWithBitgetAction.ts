@@ -85,6 +85,7 @@ const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion }) =
 export const bridgeZkWithBitget = async () => {
   await activateZkAccounts([bridgeWithBitgetActtion], {
     skipPostAction: true,
+    skipBalanceCheck: true,
     postAction: postZkBridgeAction
   });
 };
