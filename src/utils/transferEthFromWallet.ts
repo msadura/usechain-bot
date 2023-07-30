@@ -1,7 +1,8 @@
-import { SEND_GAS_LIMIT } from '@app/constants';
+import { getTxAdditionalGasFee } from '@app/utils/getChainAdditionalGasFee';
 import { getGasValue } from '@app/utils/getGasValue';
+import { getSendGasLimit } from '@app/utils/getSendGasLimit';
 import { Wallet } from 'ethers';
-import { formatEther, parseEther } from 'ethers/lib/utils';
+import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils';
 
 type SendConfig = {
   gasLimit?: number;
@@ -16,12 +17,19 @@ export const transferEthFromWallet = async (
   sendConfig?: SendConfig
 ) => {
   const balance = await signer.getBalance();
-  const sendGasLimit = sendConfig?.gasLimit || SEND_GAS_LIMIT;
+  const network = await signer.provider.getNetwork();
+  const estimatedGas = await signer.provider.estimateGas({
+    to: recipient,
+    from: signer.address
+  });
+
+  const sendGasLimit = sendConfig?.gasLimit || estimatedGas || getSendGasLimit(network.chainId);
 
   const { gasValue, gasPrice, gasLimit } = await getGasValue({
     gasLimit: sendGasLimit,
     provider: signer.provider
   });
+
   if (!gasValue) {
     throw 'Could not get gas value for transfer';
   }
@@ -37,8 +45,11 @@ export const transferEthFromWallet = async (
   //   gasPriceToUse = minGasPrice;
   // }
 
+  const additionalFee = await getTxAdditionalGasFee({ provider: signer.provider });
   const minBalance = parseEther(sendConfig?.minAccountBalance || '0');
-  const balanceOut = balance.sub(gasValue).sub(minBalance);
+  const balanceOut = balance.sub(gasValue).sub(minBalance).sub(additionalFee);
+
+  console.log('🔥fees:', formatEther(gasValue.add(additionalFee)));
 
   if (balanceOut.lte(0)) {
     throw 'No balance to send to next account';

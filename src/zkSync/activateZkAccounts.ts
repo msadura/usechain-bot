@@ -61,11 +61,11 @@ const activateAccount = async ({
   const provider = L2ToL2Action ? signer.provider : signer.providerL1;
   const gasTooHigh = await isGasTooHigh(provider, MAX_GAS_PRICE_BRIDGE);
 
-  if (gasTooHigh) {
-    console.log('🔥', `Gas price too high. Waiting ${GAS_WAIT_TIME / 1000}s`);
-    await wait(GAS_WAIT_TIME);
-    return;
-  }
+  // if (gasTooHigh) {
+  //   console.log('🔥', `Gas price too high. Waiting ${GAS_WAIT_TIME / 1000}s`);
+  //   await wait(GAS_WAIT_TIME);
+  //   return;
+  // }
 
   const balancePromise = L2ToL2Action ? signer.getBalance() : signer.getBalanceL1();
   const balanceIn = await balancePromise;

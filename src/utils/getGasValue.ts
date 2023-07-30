@@ -1,5 +1,4 @@
-import { getProvider } from '@app/blockchain/provider';
-import { BigNumber, providers } from 'ethers';
+import { BigNumber, ethers, providers } from 'ethers';
 import { formatUnits, parseUnits } from 'ethers/lib/utils';
 
 export async function getGasValue({
@@ -7,7 +6,7 @@ export async function getGasValue({
   gasPrice,
   provider
 }: {
-  gasLimit: number;
+  gasLimit: number | ethers.BigNumber;
   provider: providers.Provider;
   gasPrice?: null | BigNumber | number | string;
 }) {
@@ -29,5 +28,5 @@ export async function getGasValue({
   const limit = BigNumber.from(gasLimit);
   const gasValue = price?.mul(limit);
 
-  return { gasValue, gasPrice: price, gasLimit, maxFeePerGas };
+  return { gasValue, gasPrice: price || ethers.BigNumber.from(0), gasLimit, maxFeePerGas };
 }

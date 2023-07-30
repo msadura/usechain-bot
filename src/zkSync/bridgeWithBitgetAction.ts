@@ -13,8 +13,11 @@ import {
 } from '@app/cache/accountCache';
 import { withdrawETH } from '@app/bitget/withdrawETH';
 import { waitForBalanceUpdate } from '@app/utils/waitForBalanceUpdate';
-import { orbiterZkToOp } from '@app/orbiterBridge/orbiterZkToOp';
+import { orbiterZkToOp, waitForOpFunds } from '@app/orbiterBridge/orbiterZkToOp';
 import { depositFundsFromMinion } from '@app/bitget/depositFundsFromMinion';
+import { getSignerFromMnemonic } from '@app/blockchain/wallet';
+
+const MIN_ACCOUNT_BALANCE = '0.011';
 
 const bridgeWithBitgetActtion: ActivateZkAction = async ({ wallet, minion }) => {
   resetCacheOnAccountChange(wallet.address);
@@ -22,7 +25,8 @@ const bridgeWithBitgetActtion: ActivateZkAction = async ({ wallet, minion }) => 
   if (!getCachedActions(wallet.address).feedFromBitget) {
     // feed account from bitget
     await withdrawETH({ recipient: wallet.address });
-    await waitForBalanceUpdate({ wallet, retryInterval: 30000 });
+    const ethWallet = getSignerFromMnemonic(minion.mnemonic);
+    await waitForBalanceUpdate({ wallet: ethWallet, retryInterval: 30000 });
 
     setCachedActions(wallet.address, { feedFromBitget: true });
     await wait(5000);
@@ -30,8 +34,9 @@ const bridgeWithBitgetActtion: ActivateZkAction = async ({ wallet, minion }) => 
 
   if (!getCachedActions(wallet.address).depositToL2) {
     // bridge from eth to zk
-    const balance = wallet.getBalanceL1();
-    const depositBalance = (await balance).div(100).mul(90);
+    const balance = await wallet.getBalanceL1();
+    const depositBalance = balance.sub(parseEther(MIN_ACCOUNT_BALANCE));
+    console.log('🔥 bridge amount:', depositBalance);
     await depositEthToL2(wallet, formatEther(depositBalance));
     setCachedActions(wallet.address, { depositToL2: true });
 
@@ -40,46 +45,37 @@ const bridgeWithBitgetActtion: ActivateZkAction = async ({ wallet, minion }) => 
 
   // bridge to OP to be able to deposit back to bitget
   if (!getCachedActions(wallet.address).bridgeZkToOP) {
-    await orbiterZkToOp(wallet);
+    await orbiterZkToOp({ wallet });
     setCachedActions(wallet.address, { bridgeZkToOP: true });
   }
 
-  // send OP funcds to bitget
+  if (!getCachedActions(wallet.address).opFundsReceived) {
+    const opWallet = getSignerFromMnemonic(minion.mnemonic, 10);
+    await waitForOpFunds(opWallet);
+    setCachedActions(wallet.address, { opFundsReceived: true });
+  }
+
+  // send OP funds to bitget
   if (!getCachedActions(wallet.address).sendOpToBitget) {
-    await depositFundsFromMinion({ minion, chain: 'op' });
+    await depositFundsFromMinion({ minion, chain: 10 });
     setCachedActions(wallet.address, { sendOpToBitget: true });
   }
 
   return true;
 };
 
-const postZkBridgeAction: PostZkAction = async ({ wallet, recipient, minion }) => {
+const postZkBridgeAction: PostZkAction = async ({ minion }) => {
   // move funds on L1 account
   console.log('🔥', 'POST ACTION...');
   const updatedMinions = getMinions();
   const updatedMinion = updatedMinions[minion.id];
-  const balanceIn = parseEther(minion.amountIn || '0');
 
-  // check out eth balance
-  const balanceAfterActions = await wallet.getBalanceL1();
-
-  let balanceOut = balanceAfterActions;
-  if (recipient) {
-    // transfering l1 eth
-    balanceOut = await transferEthFromWallet(wallet.ethWallet(), recipient.address, {
-      gasLimit: 21000,
-      minGasPrice: 25
-    });
-  }
-
-  updatedMinion.amountOut = formatEther(balanceOut);
-  updatedMinion.totalFee = formatEther(balanceIn.sub(balanceOut));
   updatedMinion.done = true;
   updateMinion(updatedMinion);
 
   resetCache();
 
-  console.log('✅', `Minion: ${minion.id} done. Funds send to next account. ✅`);
+  console.log('✅', `Minion: ${minion.id} done. Funds send to bitget. ✅`);
 };
 
 export const bridgeZkWithBitget = async () => {

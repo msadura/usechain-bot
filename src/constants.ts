@@ -19,3 +19,14 @@ export const SEND_GAS_LIMIT = 600000; // 21k for ETH mainnet, 499k for argitrum,
 
 export const MAX_APPROVE_AMOUNT = ethers.constants.MaxUint256;
 export const ZERO_ADDRESS = ethers.constants.AddressZero;
+
+export const SEND_GAS_LIMITS: Record<string, number> = {
+  eth: 21000,
+  zkSync: 600000
+};
+
+export const CHAIN_ID_TO_SYMBOL: Record<number, string> = {
+  1: 'eth',
+  10: 'op',
+  324: 'zkSync'
+};
