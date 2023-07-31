@@ -12,7 +12,7 @@ export async function connectProvider() {
   return provider;
 }
 
-export function getProvider(chain: ethers.providers.Networkish = 'ETH') {
+export function getProvider(chain: ethers.providers.Networkish = 1) {
   if (!process.env.INFURA_API_KEY) {
     throw new Error('INFURA_API_KEY env var is not set');
   }

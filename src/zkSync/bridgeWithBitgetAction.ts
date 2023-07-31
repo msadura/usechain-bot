@@ -1,5 +1,4 @@
 import { getMinions, updateMinion } from '@app/minions/minions';
-import { transferEthFromWallet } from '@app/utils/transferEthFromWallet';
 import { wait } from '@app/utils/wait';
 import { activateZkAccounts } from '@app/zkSync/activateZkAccounts';
 import { depositEthToL2 } from '@app/zkSync/depositEthToL2';
@@ -36,7 +35,8 @@ const bridgeWithBitgetActtion: ActivateZkAction = async ({ wallet, minion }) => 
     // bridge from eth to zk
     const balance = await wallet.getBalanceL1();
     const depositBalance = balance.sub(parseEther(MIN_ACCOUNT_BALANCE));
-    console.log('🔥 bridge amount:', depositBalance);
+    console.log('🔥 bridge amount:', formatEther(depositBalance));
+
     await depositEthToL2(wallet, formatEther(depositBalance));
     setCachedActions(wallet.address, { depositToL2: true });
 

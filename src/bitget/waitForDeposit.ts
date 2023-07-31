@@ -5,7 +5,7 @@ import { wait } from '@app/utils/wait';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
-const DEPOSIT_HISTORY_TIME = 10 * 60 * 1000; // 1 minute
+const DEPOSIT_HISTORY_TIME = 60 * 1000; // 1 minute
 const MAX_RETIRES = 3;
 const RETRY_INTERVAL = 1000 * 60 * 1; // 1 minute
 const WAIT_INTERVAL = 1000 * 60 * 1; // 1 minutes

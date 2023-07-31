@@ -31,11 +31,9 @@ export function getWallet(): ethers.Wallet {
   throw 'Incorrect wallet connection type or accoount not connected';
 }
 
-export function getSignerFromMnemonic(
-  mnemonic: string,
-  chain: ethers.providers.Networkish = 'eth'
-) {
+export function getSignerFromMnemonic(mnemonic: string, chain: ethers.providers.Networkish = 1) {
   const wallet = ethers.Wallet.fromMnemonic(mnemonic);
   const provider = getProvider(chain);
+
   return provider && wallet.connect(provider);
 }
