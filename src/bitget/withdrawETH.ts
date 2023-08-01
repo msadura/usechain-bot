@@ -11,6 +11,7 @@ export async function withdrawETH({
   amount?: string;
   chain?: string;
 }) {
+  console.log('🔥ch', chain, recipient);
   try {
     const available = await getETHBalance();
 
